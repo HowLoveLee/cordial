@@ -1,0 +1,21 @@
+{%  extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <h3>This is an extension to the base called home.html</h3>
+    <p>This is where our home page will be at.</p>
+    <hr>
+    
+    <p>to access admin : cordial-associates.com/admin</p>
+    <p>user: defaultUser | password: KingKong49</p>
+    <hr>
+    <p>if you see titles [Exam1, Exam2, Exam3] The database is working as spected</p>
+    <p>if you see gifs media is being loaded correctly.</p>
+    <hr>
+    {% for exam in exams %}
+        <p>{{ exam.name }}</p>
+        <img src="{{ exam.gif_file.url }}" alt="{{ exam.name }}"  >
+        <hr>
+    {% endfor %}
+{% endblock %}
