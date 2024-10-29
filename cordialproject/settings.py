@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cordialapp.apps.CordialappConfig',
+    'cordialapp'
 ]
 
 MIDDLEWARE = [
@@ -126,4 +127,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # defaultUser
-# KingKong49
+# default123
+# Or KingKong49

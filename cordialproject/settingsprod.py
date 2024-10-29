@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['cordial-associates.com']
+ALLOWED_HOSTS = ['cordial-associates.com', 'www.cordial-associates.com']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cordialapp.apps.CordialappConfig',
+    'cordialapp'
 ]
 
 MIDDLEWARE = [
