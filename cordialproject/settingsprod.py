@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+
+from django.conf.global_settings import CSRF_COOKIE_SECURE, SESSION_COOKIE_SECURE
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -131,3 +133,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/webapps/cordial/cordial/media/'
+
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://cordial-associates.com', 'https://www.cordial-associates.com']
