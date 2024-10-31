@@ -1,0 +1,180 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 6% 15px 3%;
+    background-color: white;
+    opacity: 95%;
+}
+header h1 {
+    font-weight: 500;
+}
+nav li {
+    display: inline-block;
+    list-style: none;
+    font-size: 19px;
+    text-decoration: none;
+    padding-left: 40px;
+}
+nav li a {
+    color: black;
+    text-decoration: none;
+    font-weight: 500;
+}
+nav li a:hover {
+    border-bottom: 3px solid #01478E;
+    transition: 0.3s;
+}
+#active {
+    background-color: #01478E;
+    border-radius: 40px;
+    padding: 16px 18px;
+    color: white;
+}
+#active:hover {
+    border: none;
+    color: lightgray;
+}
+
+#box {
+    width: 250px;
+    height: 370px;
+    float: right;
+    padding: 20px 30px;
+    background-color: #01478E;
+    border: 2px solid white;
+    font-size: 21px;
+    color: whitesmoke;
+    opacity: 95%;
+    margin: 8% 6% 0px 0px;
+}
+#slogan {
+    width: 580px;
+    height: 230px;
+    color: white;
+    bottom: 0;
+    position: absolute;
+}
+#slogan h1 {
+    color: white;
+    font-weight: 600;
+    margin: 18% 0px 0px 20%;
+    font-size: 60px;
+    font-style: italic;
+    text-align: center;
+    white-space: nowrap;
+}
+#registerbtn {
+    margin: 3% 0% 0% 35%;
+    padding: 15px 25px;
+    border-radius: 25px 25px;
+    background: white;
+    border: none;
+}
+#registerbtn a {
+    text-decoration: none;
+    color: black;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* book appointment div */
+.book h1 {
+    color: #01478E;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    font-size: 60px;
+}
+#bookbtn, #bookbtn a {
+    padding: 20px 40px;
+    border-radius: 30px 30px;
+    background-color: #01478E;
+    border: none;
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+}
+#bookbtn a:hover {
+    color: black;
+}
+#appointment {
+    margin: 4% 10% 0px 10%;
+}
+#appointment p {
+    color: #01478E;
+    font-size: 17px;
+}
+#appointment img, #contact-form {
+    float: right;
+    margin: 6% 8% 0% 0%;
+}
+#tips {
+    width: 50%;
+    border-bottom: 1px solid #ffd51d;
+}
+#campuses, .contact {
+    margin: 10px 0% 0px 10%;
+    width: 40%;
+}
+.campuses h1, .contact h1 {
+    color: #ffd51d;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    font-size: 50px;
+}
+.contact p {
+    color: #01478E;
+    font-size: 17px;
+    height: 8px;
+}
+iframe {
+    padding-bottom: 2%;
+}
+
+/* contact */
+input, textarea {
+    border-radius: 20px 20px;
+    padding: 8px 30px;
+    border: 1px solid black;
+}
+textarea, #email {
+    width: 166%;
+}
+.contact {
+    width: 90%;
+    padding-bottom: 6%;
+}
+#contact-info {
+    float: left;
+    width: 50%;
+}
+#contact-info img {
+    margin-top: 30px;
+}
+#contactform {
+    padding-top: 5%;
+    white-space: nowrap;
+}
+label {
+    padding-bottom: 15px;
+}
+#contactform p {
+    font-size: 20px;
+}
+#submitBtn {
+    border-radius: 20px 20px;
+    padding: 10px 30px;
+    background-color: #01478E;
+    color: white;
+    border: 1px solid white;
+}
+/*#submitBtn:hover {*/
+/*    background-image: linear-gradient(rgb(0 0 0/30%) 0 0);*/
+/*}*/
+
