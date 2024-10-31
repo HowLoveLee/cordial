@@ -1,18 +1,108 @@
 {%  extends 'base.html' %}
-
-{% block title %}Home Page{% endblock %}
+{% load static %}
+{% block title %}Cordial-Associates{% endblock %}
 
 {% block content %}
-    <h3>This is an extension to the base called home.html</h3>
-    <p>This is where our home page will be at.</p>
-    <hr>
     
-    <p>if you see titles [Exam1, Exam2, Exam3] The database is working as spected</p>
-    <p>if you see gifs media is being loaded correctly.</p>
-    <hr>
-    {% for exam in exams %}
-        <p>{{ exam.name }}</p>
-        <img src="{{ exam.gif_file.url }}" alt="{{ exam.name }}"  >
-        <hr>
-    {% endfor %}
+    
+    
+<body>
+         <div class="wrapper" style="
+        background-image: url({% static 'images/csn.jpg' %});
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url({% static 'images/csn.jpg' %});
+        background-size: cover;
+        background-position: fixed;
+        width: 100%;
+        height: 100vh;
+        padding-bottom: 7%;
+    ">
+            <header>
+            <img src={% static 'images/logo.png.webp'%}  width="320px" height="90px">
+            <nav>
+                <ul>
+                    <li><a href="#">Campuses</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="{% url 'login' %}" id="active">Book Now</a></li>
+
+                </ul>
+            </nav>
+        </header>
+        </div>
+        <div id="box">
+            <p>Welcome to the CSN Online Exam Registration System website!</p>
+            <p>Please feel free to explore, book your exams, and manage your registrations with ease.</p>
+            <p>Our job here at CSN is to assist you in every step of your academic journey. Let us help you succeed.</p>
+        </div>
+        <div id="slogan">.
+            <h1>Investing in <span style="color: #01478E">our</span> future <br>
+            <span style="color: #FFD51D">Students First.</span></h1>
+        </div>
+    </div>
+
+    <div class="book">
+        <div id="appointment">
+            <img src={% static 'images/exam.png'%} width="300px" height="300px">
+            <button id="bookbtn"><a href="#">Learn More</a></button>
+            <h1>Book <span style="color: #FFD51D">an</span> appointment</h1>
+            <div id="tips">
+                <p style="margin-top: 5%;">Please use your full name and NSHE ID when completing your appointment.</p>
+                <p>Use your provided CSN email for further confirmation and updates.</p>
+                <p>Use your phone number for further confirmation and updates.</p>
+                <p style="margin-bottom: 15%;">Clarify which campus you would like to be registering with for you exam.</p>
+            </div>
+        </div>
+    </div>
+    <!--
+        <div id="campuses">
+            <h1 style="border: none">North Las Vegas Campus</h1>
+            <img src="images/nlv.webp" width="450px" height="300px"><br>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3218.7984159072166!2d-115.10727282418807!3d36.220094372418274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8c2b7e6c9cdf7%3A0xc582e92247f9fec8!2sCollege%20of%20Southern%20Nevada%20North%20Las%20Vegas%20Campus!5e0!3m2!1sen!2sus!4v1727591601374!5m2!1sen!2sus" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <h1>West Charleston Campus</h1>
+            <img src="images/wc.jpg" width="450px" height="300px"><br>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6442.880211076526!2d-115.23710841654045!3d36.155843601370734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8c11e9d5d9ff3%3A0x27dcc6b90634ddac!2sCollege%20of%20Southern%20Nevada!5e0!3m2!1sen!2sus!4v1727592048238!5m2!1sen!2sus" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>           
+            <h1>Henderson Campus</h1>
+            <img src="images/henderson.jpg" width="450px" height="300px"><br>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3227.560065034178!2d-114.97014992434995!3d36.006614572483976!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8d43822ca62cb%3A0xa7633d49e12c6725!2sCollege%20of%20Southern%20Nevada%20Henderson%20Campus!5e0!3m2!1sen!2sus!4v1727592073335!5m2!1sen!2sus" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    -->
+
+        <div class="contact">
+            <div id="contact-info">
+                <h1>Contact Us</h1>
+                <p>Have trouble or any questions?</p>
+                <p>Fill out some basic info and we will be in touch shortly.</p>
+                <p>We're excited to hear from you!</p>
+                <img src={% static 'images/coyoteplan.png'%}  width="250px" height="260px">
+    
+            </div>
+            <div id="contactform">
+                <form>
+                    <table>
+                        <tr>
+                            <p>Name <span style="color: black;">(required)</span></p>
+                            <td><label for="fname">First Name:</label></td>
+                            <td><label for="lname">Last Name:</label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="fname" name="fname" required></td>
+                            <td><input type="text" id="lname" name="lname" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="email">Email <span style="color: black">(required)</span></label><br>
+                            <input type="email" id="email" name="email" required></td> 
+                        </tr>
+                        <tr>
+                            <td><label for="message">Message:</label><br>
+                            <textarea id="message" rows="10" col="50" required></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit" id="submitBtn">Submit</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    <script src="" async defer></script>
+    </body>
 {% endblock %}

@@ -1,0 +1,37 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>{% block title %}Cordial-Login{% endblock %}</title>
+</head>
+
+<body style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url({% static 'images/login.webp' %});
+    background-size: cover;
+    background-position: center;
+}">
+    <div class="wrapper">
+        <form action="/"method="GET">
+            <h1>Login</h1>
+                <div class="login-input">
+                    <input type="text" id="studentEmail" name="studentEmail" minlength="10" pattern="\d{10}.+student\.csn\.edu" placeholder="1234567890@student.csn.edu" required>
+                    <i class='bx bx-user'></i>
+                </div>
+                <div class="login-input">
+                    <input type="text" id="studentPassword" name="studentPassword" minlength="10" maxlength="10" pattern="\d{10}" placeholder="NSHE ID" required>
+                    <i class='bx bx-lock'></i>
+                </div>
+            <button type="submit" id="loginBtn" name="loginBtn" onsubmit="passwordCheck()">Login</button>
+            <div class="login-img">
+                <img src={% static 'images/logowhite.png'%}>
+            </div>
+        </form>
+    </div>
+
+</body>

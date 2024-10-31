@@ -5,3 +5,7 @@ def home(request):
     exams = Exam.objects.all()
     context = {'exams' : exams}
     return  render(request, 'home.html', context)
+
+
+def login(request):
+    return render(request, 'login.html')
