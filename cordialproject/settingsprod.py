@@ -137,6 +137,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/webapps/cordial/cordial/media/'
 
 
-# CSRF_COOKIE_SECURE = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_TRUSTED_ORIGINS = ['https://cordial-associates.com', 'https://www.cordial-associates.com']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://cordial-associates.com', 'https://www.cordial-associates.com']
