@@ -8,13 +8,13 @@
     
 <body>
     <div class="wrapper">
-            <header>
+        <header>
             <img src={% static 'images/logo.png.webp'%}  width="320px" height="90px" alt="">
             <nav>
                 <ul>
                     <li><a href="#">Campuses</a></li>
                     <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href=".contact">Contact</a></li>
                     <li><a href="{% url 'login' %}" id="active">Book Now</a></li>
 
                 </ul>
@@ -72,6 +72,7 @@
                     <table>
                         <tr>
                             <p>Name <span style="color: black;">(required)</span></p>
+                            <br>
                             <td><label for="fname">First Name:</label></td>
                             <td><label for="lname">Last Name:</label></td>
                         </tr>
