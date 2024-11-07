@@ -6,6 +6,5 @@
 db.sqlite3
 */.idea/
 .idea/
-/static/
 /staticfiles/
-#Cordial123User
+#Cordial123Users
