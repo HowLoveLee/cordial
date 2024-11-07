@@ -4,34 +4,50 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>{% block title %}Cordial-Login{% endblock %}</title>
+    <script src={% static "javascript/script.js"%}></script>
 </head>
-
-<body style="
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url({% static 'images/login.webp' %});
-    background-size: cover;
-    background-position: center;
-}">
-    <div class="wrapper">
-        <form action="/"method="GET">
+<body>
+    <div id="wrapper">
+        <form action="examreg.html"method="GET" id="login-form">
             <h1>Login</h1>
-                <div class="login-input">
-                    <input type="text" id="studentEmail" name="studentEmail" minlength="10" pattern="\d{10}.+student\.csn\.edu" placeholder="1234567890@student.csn.edu" required>
-                    <i class='bx bx-user'></i>
-                </div>
-                <div class="login-input">
-                    <input type="text" id="studentPassword" name="studentPassword" minlength="10" maxlength="10" pattern="\d{10}" placeholder="NSHE ID" required>
-                    <i class='bx bx-lock'></i>
-                </div>
-{#            <button type="submit" id="loginBtn" name="loginBtn" onsubmit="passwordCheck()">Login</button>#}
-            <a  href="{% url 'student_dashboard' %}" >Login</a>
+            <div class="login-input">
+                <input type="text" id="studentEmail" name="studentEmail" minlength="10" placeholder="First Name + Last 4 digits of NSHE ID" required>
+                <i class='bx bx-user'></i>
+            </div>  
+            <div class="login-input">
+                <input type="text" id="studentPassword" name="studentPassword" minlength="10" maxlength="10" pattern="\d{10}" placeholder="NSHE ID" required>
+                <i class='bx bx-lock'></i>
+            </div>   
+            <button type="submit" id="loginBtn" name="loginBtn">Login</button>
+            <p id="createAccount" onclick="createAccount()">Need an account? Register</p>
             <div class="login-img">
-                <img src={% static 'images/logowhite.png'%}>
+                <p><img src={% static "images/logowhite.png"%}></p>
+            </div>
+        </form>
+
+        <form action="examreg.html"method="GET" id="register-form">
+            <h1>Register</h1>
+            <div class="register-input">
+                <input type="text" id="r-email" name="r-email" minlength="10" pattern="\d{10}.+student\.csn\.edu" placeholder="1234567890@student.csn.edu" required>
+                <i class='bx bx-user'></i>
+            </div>
+            <div class="register-input">
+                <input type="text" id="r-username" name="r-username" placeholder="First Name + Last 4 Digits of NSHE ID" required>
+                <i class='bx bx-user'></i>
+            </div>
+            <div class="register-input">
+                <input type="text" id="r-password" name="r-password" minlength="10" maxlength="10" pattern="\d{10}" placeholder="Password (NSHE ID)" required>
+                <i class='bx bx-lock-open-alt'></i>
+            </div>    
+            <div class="register-input">
+                <input type="text" id="r-password2" name="r-password2" minlength="10" maxlength="10" pattern="\d{10}" placeholder="Repeat Password" oninput="matchingPass()" required>
+                <i class='bx bx-lock'></i>
+            </div> 
+            <button type="submit" id="registerBtn" name="registerBtn">Create Account</button>
+            <p id="login" onclick="login()">Already have an account? Login</p>
+            <div class="register-img">
+                <p><img src={% static "images/logowhite.png"%}></p>
             </div>
         </form>
     </div>
-
 </body>
