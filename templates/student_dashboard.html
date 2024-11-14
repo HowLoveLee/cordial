@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Welcome to your dashboard!</h1>
+    <p>Here you can manage your account and view your exam details.</p>
+    
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+{% endblock %}
