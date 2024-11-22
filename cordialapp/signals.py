@@ -7,3 +7,7 @@ from .models import StudentProfile
 def create_student_profile(sender, instance, created, **kwargs):
     if created:
         StudentProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_student_profile(sender, instance, **kwargs):
+    instance.studentprofile.save()

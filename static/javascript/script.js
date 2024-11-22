@@ -15,6 +15,7 @@ function createAccount() {
     wrapper.style.height = "650px";
     registerDiv.style.display = "block";
     loginDiv.style.display = "none";
+
 }
 
 /* password validator */

@@ -1,9 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
-
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from cordialapp.forms import RegistrationForm, LoginForm
+from cordialapp.models import Registration, Location, Exam
 
 
 def landing(request):
@@ -18,20 +21,22 @@ def login(request):
                 first_name = register_form.cleaned_data.get('first_name')
                 last_name = register_form.cleaned_data.get('last_name')
                 email = register_form.cleaned_data.get('email')
+                nshe_id = register_form.cleaned_data.get('nshe_id')
+                password = register_form.cleaned_data.get('password')
 
                 if not email.endswith('@student.csn.edu'):
                     messages.error(request, 'Email must end with @student.csn.edu.')
                     return render(request, 'login.html', {'register_form': register_form, 'login_form': login_form})
 
-                password = email.split('@')[0]
+                username = f"{first_name}{nshe_id}"
 
                 # Create the user
                 user = User.objects.create_user(
-                    username=email,  # Store email as the username
+                    username=username,
                     email=email,
                     first_name=first_name,
                     last_name=last_name,
-                    password=password  # Set the password programmatically
+                    password=password
                 )
 
                 auth_login(request, user)
@@ -42,15 +47,14 @@ def login(request):
             login_form = LoginForm(request.POST)
             register_form = RegistrationForm()
             if login_form.is_valid():
-                email = login_form.cleaned_data.get('email')
+                username = login_form.cleaned_data.get('username')
                 password = login_form.cleaned_data.get('password')
-                user = authenticate(request, username=email,
-                                    password=password)  # This should work if `username=email` during registration
+                user = authenticate(request, username=username, password=password)
                 if user is not None:
                     auth_login(request, user)
                     return redirect('student_dashboard')
                 else:
-                    messages.error(request, 'Invalid email or password.')
+                    messages.error(request, 'Invalid username or password.')
 
     else:
         login_form = LoginForm()
@@ -62,19 +66,57 @@ def login(request):
     }
     return render(request, 'login.html', context)
 
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-
 @require_POST
 def logout_view(request):
     logout(request)
     return redirect('landing')
 @login_required(login_url='/login/')  # Redirects to the login page if the user is not logged in
 def student_dashboard(request):
-    return render(request, 'student_dashboard.html')
+    profile = request.user.studentprofile  # Access the StudentProfile
+    registered_exams = profile.registered_exams()  # Get the registered exams
+    empty_slots = 3 - profile.registered_exam_count  # Calculate empty slots
+    empty_slots_range = range(empty_slots)  # Create a range for the empty slots
 
+    context = {
+        'user': request.user,
+        'registered_exams': registered_exams,
+        'empty_slots_range': empty_slots_range,  # Pass the range to the template
+    }
+
+    return render(request, 'student_dashboard.html', context)
+
+@login_required(login_url='/login/')
 def exam_registration_process(request):
-    return render(request, 'exam_registration_process.html')
+    if request.method == 'POST':
+        exam_name = request.POST.get('exam_name')
+        exam_date = request.POST.get('exam_date')
+        exam_time = request.POST.get('exam_time')
+
+        if not (exam_name and exam_date and exam_time):
+            return HttpResponseBadRequest("Incomplete registration details.")
+
+        # Get the Exam object
+        try:
+            exam = Exam.objects.get(name=exam_name)
+        except Exam.DoesNotExist:
+            return HttpResponseBadRequest("Exam does not exist.")
+
+        # Create the Registration
+        Registration.objects.create(
+            student=request.user,
+            exam=exam,
+            location=exam.locations.first(),  # Assign the first location (customize as needed)
+            selected_date=exam_date,
+            selected_time=exam_time,
+        )
+
+        # Redirect to the student dashboard
+        return redirect('student_dashboard')
+
+    # For GET requests, display the registration page
+    exams = Exam.objects.prefetch_related('locations').all()
+    return render(request, 'exam_registration_process.html', {'exams': exams})
+
 def restricted_access(request):
     messages.warning(request, 'Session Expired. Please log in again.')
     return redirect('/login/?session_expired=true')

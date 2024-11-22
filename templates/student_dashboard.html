@@ -14,14 +14,33 @@
     </body>
 </html>
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
     <h1>Welcome to your dashboard!</h1>
     <p>Here you can manage your account and view your exam details.</p>
+    
+    <p>Hello, {{ user.first_name }}</p>
+    
+    <h2>Your Exam Slots</h2>
+    <ul>
+        <!-- Display registered exams -->
+        {% for exam in registered_exams %}
+            <li>
+                {{ exam.exam.name }} - {{ exam.selected_date }} at {{ exam.selected_time }}
+                (Location: {{ exam.location }})
+            </li>
+        {% endfor %}
+        
+        <!-- Display empty slots -->
+        {% for i in empty_slots_range %}
+            <li><a href="{% url 'exam_registration_process' %}">Empty Slot</a></li>
+        {% endfor %}
+    </ul>
     
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
         <button type="submit">Log Out</button>
     </form>
+
 {% endblock %}
 

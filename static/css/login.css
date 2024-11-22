@@ -27,13 +27,14 @@ body {
     font-size: 36px;
     text-align: center;
     color: white;
-    padding: 50px 60px 0px 60px;
+   padding: 50px 60px 0 60px;
 }
+
 #wrapper .login-input, #wrapper .register-input {
     position: relative;
     width: 100%;
     height: 50px;
-    margin: 30px 0;
+    margin: 15px 0;
     padding: 0px 60px 0px 60px;
 }
 .login-input input, .register-input input {
@@ -42,11 +43,13 @@ body {
     color: white;
     font-size: 15px;
     background: transparent;
-    border: none;
     outline: none;
     border: 2px solid rgba(255, 255, 255, .2);
     border-radius: 30px;
     padding: 20px 45px 20px 20px;
+}
+.register-input input ::placeholder {
+    color: rgba(255, 255, 255, .5);
 }
 .login-input i, .register-input i {
     position: absolute;
@@ -71,15 +74,24 @@ body {
 #loginBtn a, #registerBtn a {
     color: white;
 }
-.login-img img, .register-img img {
+
+.csn-link{
+display: flex;
+    justify-content: center;
+    align-items: center;
+        margin: 0 auto;
+        width: 155px;
+    height: 75px;
+    opacity: 85%;
+}
+.csn-link img{
     width: 155px;
     height: 75px;
     opacity: 85%;
-    margin-right: 15px;
+    margin:0;
+
 }
-.login-img p, .register-img p {
-    text-align: center;
-}
+
 #login-form p, #register-form p {
     cursor: pointer;
     text-align: center;
@@ -92,5 +104,16 @@ body {
 #createAccount, #login {
     margin: 35px 0px 20px 0px;
 }
+.reg-link{
+        margin: 15px 0px 20px 0px !important;
 
+}
+.register-input input, .login-input input {
+    background: rgba(0, 0, 0, 0.27);
+}
+
+
+.reg-title{
+       padding: 20px 60px 0 60px !important;
+}
 

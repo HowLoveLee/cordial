@@ -31,17 +31,47 @@ class RegistrationForm(forms.ModelForm):
             'required': True,
         })
     )
+    nshe_id = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={
+            'id': 'r-nshe-id',
+            'name': 'r-nshe-id',
+            'placeholder': 'NSHE-ID',
+            'required': True,
+        })
+    )
+    username = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={
+            'id': 'r-username',
+            'name': 'r-username',
+            'placeholder': 'Username: Non-editable',
+            'readonly': True,
+            'required': True,
+        }),
+    )
+    password = forms.CharField(
+        label='',
+        widget=forms.PasswordInput(attrs={
+            'id': 'r-password',
+            'name': 'r-password',
+            'placeholder': 'Password',
+            'required': True,
 
+        }),
+        min_length=10,
+        max_length=20,
+    )
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('first_name', 'last_name', 'email', 'nshe_id', 'username', 'password')
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(
-        label='Email',
+    username = forms.CharField(
+        label='Username',
         widget=forms.TextInput(attrs={
-            'placeholder': 'Email',
+            'placeholder': 'Username',
             'required': True,
         }),
     )
@@ -52,5 +82,6 @@ class LoginForm(forms.Form):
             'required': True,
         }),
         min_length=10,
-        max_length=10,
+        max_length=20,
+
     )
