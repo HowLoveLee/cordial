@@ -1,0 +1,41 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    width: 100%;
+    min-height: 100vh;
+    displaY: flex;
+    justify-content: center;
+    align-items: center;
+}
+.campuses {
+    width: 100%;
+    max-width: 1440px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: wrap;
+}
+.campus {
+    width: 269px;
+    padding: 15px;
+    min-height: 430px;
+}
+.campus1 {
+    background-color: blue;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.campus2 {
+    background-color: red;
+}
+.campus1 {
+    background-color: purple;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.campus-inner {
+    padding: 10px;
+}
