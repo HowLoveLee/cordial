@@ -29,3 +29,4 @@ function matchingPass() {
 }
 
 document.getElementById('studentID').innerHTML = document.getElementById('studentPassword').value;
+

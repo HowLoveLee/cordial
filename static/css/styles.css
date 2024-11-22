@@ -126,7 +126,7 @@ nav li a:hover {
     border-bottom: 1px solid #ffd51d;
 }
 #campuses, #contact {
-    margin: 10px 0% 0px 10%;
+    margin: 10px 0% 5% 10%;
     width: 40%;
 }
 .campuses h1, #contact h1 {
@@ -154,12 +154,14 @@ textarea, #email {
     width: 166%;
 }
 #contact {
-    width: 90%;
-    padding-bottom: 6%;
+    width: 80%;
+    padding-bottom: 8%;
+    border-bottom: 1px solid #ffd51d;
 }
 #contact-info {
     float: left;
     width: 50%;
+    padding-right: 5%;
 }
 #contact-info img {
     margin-top: 30px;
@@ -189,3 +191,25 @@ label {
 fieldset {
     width: 25%;
 }
+
+
+#campuses{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 60px;
+    margin: 12px 60px;
+    padding-left: 5%;
+    letter-spacing: 2px;
+    font-size: 14px;
+    color:#01478E;
+    margin-top: 5%;
+    text-align: center;
+}
+#campus-header h1 {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color:#01478E;
+}
+
