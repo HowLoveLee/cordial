@@ -1,53 +1,69 @@
 {% load static %}
-
+<!DOCTYPE html>
+<html>
 <head>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>{% block title %}Cordial-Login{% endblock %}</title>
-    <script src={% static "javascript/script.js"%}></script>
+    <title>Cordial-Login</title>
+    <script src="{% static 'javascript/script.js' %}"></script>
 </head>
 <body>
     <div id="wrapper">
-        <form action="examreg.html"method="GET" id="login-form">
+        <!-- Login Form -->
+        <form method="POST" id="login-form">
+            {% csrf_token %}
             <h1>Login</h1>
-            <div class="login-input">
-                <input type="text" id="studentEmail" name="studentEmail" minlength="10" placeholder="First Name + Last 4 digits of NSHE ID" required>
-                <i class='bx bx-user'></i>
-            </div>  
-            <div class="login-input">
-                <input type="text" id="studentPassword" name="studentPassword" minlength="10" maxlength="10" pattern="\d{10}" placeholder="NSHE ID" required>
-                <i class='bx bx-lock'></i>
-            </div>   
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% for field in login_form %}
+                <div class="login-input">
+                    {{ field }}
+                    {% if field.name == 'email' %}
+                        <i class='bx bx-envelope'></i>
+                    {% elif field.name == 'password' %}
+                        <i class='bx bx-lock'></i>
+                    {% endif %}
+                </div>
+            {% endfor %}
             <button type="submit" id="loginBtn" name="loginBtn">Login</button>
             <p id="createAccount" onclick="createAccount()">Need an account? Register</p>
             <div class="login-img">
-                <p><img src={% static "images/logowhite.png"%}></p>
+                <p><img src="{% static 'images/logowhite.png' %}"></p>
             </div>
         </form>
 
-        <form action="examreg.html"method="GET" id="register-form">
+        <!-- Registration Form -->
+        <form method="POST" id="register-form" style="display: none;">
+            {% csrf_token %}
             <h1>Register</h1>
-            <div class="register-input">
-                <input type="text" id="r-email" name="r-email" minlength="10" pattern="\d{10}.+student\.csn\.edu" placeholder="1234567890@student.csn.edu" required>
-                <i class='bx bx-user'></i>
-            </div>
-            <div class="register-input">
-                <input type="text" id="r-username" name="r-username" placeholder="First Name + Last 4 Digits of NSHE ID" required>
-                <i class='bx bx-user'></i>
-            </div>
-            <div class="register-input">
-                <input type="text" id="r-password" name="r-password" minlength="10" maxlength="10" pattern="\d{10}" placeholder="Password (NSHE ID)" required>
-                <i class='bx bx-lock-open-alt'></i>
-            </div>    
-            <div class="register-input">
-                <input type="text" id="r-password2" name="r-password2" minlength="10" maxlength="10" pattern="\d{10}" placeholder="Repeat Password" oninput="matchingPass()" required>
-                <i class='bx bx-lock'></i>
-            </div> 
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% for field in register_form %}
+                <div class="register-input">
+                    {{ field }}
+                    {% if field.name == 'first_name' or field.name == 'last_name' %}
+                        <i class='bx bx-user'></i>
+                    {% elif field.name == 'email' %}
+                        <i class='bx bx-envelope'></i>
+                    {% endif %}
+                </div>
+            {% endfor %}
             <button type="submit" id="registerBtn" name="registerBtn">Create Account</button>
             <p id="login" onclick="login()">Already have an account? Login</p>
             <div class="register-img">
-                <p><img src={% static "images/logowhite.png"%}></p>
+                <p><img src="{% static 'images/logowhite.png' %}"></p>
             </div>
         </form>
     </div>
 </body>
+</html>
