@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="eng">
 <head>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -23,8 +23,8 @@
             {% for field in login_form %}
                 <div class="login-input">
                     {{ field }}
-                    {% if field.name == 'email' %}
-                        <i class='bx bx-envelope'></i>
+                    {% if field.name == 'username' %}
+                        <i class='bx bx-id-card'></i>
                     {% elif field.name == 'password' %}
                         <i class='bx bx-lock'></i>
                     {% endif %}
@@ -32,15 +32,15 @@
             {% endfor %}
             <button type="submit" id="loginBtn" name="loginBtn">Login</button>
             <p id="createAccount" onclick="createAccount()">Need an account? Register</p>
-            <div class="login-img">
-                <p><img src="{% static 'images/logowhite.png' %}"></p>
-            </div>
+            <a class="csn-link" href="{% url 'landing' %}"><img src="{% static 'images/logowhite.png' %}" alt="CSN LOGO"></a>
+
         </form>
 
+    
         <!-- Registration Form -->
         <form method="POST" id="register-form" style="display: none;">
             {% csrf_token %}
-            <h1>Register</h1>
+            <h1 class="reg-title">Register</h1>
             {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}
@@ -55,15 +55,37 @@
                         <i class='bx bx-user'></i>
                     {% elif field.name == 'email' %}
                         <i class='bx bx-envelope'></i>
+                        
+                    {% elif field.name == 'password' %}
+                        <i class='bx bx-lock'></i>
+                    {% elif field.name == 'nshe_id' %}    
+                        <i class='bx bxs-id-card'></i>
+                    {% elif field.name == 'username' %}
+                        <i class='bx bx-id-card'></i>
                     {% endif %}
                 </div>
             {% endfor %}
             <button type="submit" id="registerBtn" name="registerBtn">Create Account</button>
-            <p id="login" onclick="login()">Already have an account? Login</p>
-            <div class="register-img">
-                <p><img src="{% static 'images/logowhite.png' %}"></p>
-            </div>
+            <p id="login" onclick="login()" class="reg-link">Already have an account? Login</p>
+                <a class="csn-link" href="{% url 'landing' %}"><img src="{% static 'images/logowhite.png' %}" alt="CSN LOGO"></a>
         </form>
     </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const firstNameField = document.getElementById('r-first-name');
+    const nsheIdField = document.getElementById('r-nshe-id');
+    const usernameField = document.getElementById('r-username');
+
+    function updateUsername() {
+        const firstName = firstNameField.value.trim();
+        const nsheId = nsheIdField.value.trim();
+        usernameField.value = firstName + nsheId;
+    }
+
+    firstNameField.addEventListener('input', updateUsername);
+    nsheIdField.addEventListener('input', updateUsername);
+});
+</script>
+
 </body>
 </html>

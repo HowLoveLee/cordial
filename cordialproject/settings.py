@@ -114,10 +114,20 @@ USE_I18N = True
 USE_TZ = True
 
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Points to a static folder in the base directory
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Collects all static files here for production
+
+# Include both the 'static' directory and 'node_modules' for static files
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Points to the static folder
+    os.path.join(BASE_DIR, 'node_modules'),  # Include node_modules
+]
+
+# This is where static files will be collected in production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Media files (Uploaded content)
 MEDIA_URL = '/media/'

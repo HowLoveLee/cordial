@@ -37,6 +37,12 @@ class RegistrationForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email')
 
 
+# Email
+# Username
+# password
+# First name
+# Last name
+
 class LoginForm(forms.Form):
     email = forms.EmailField(
         label='Email',

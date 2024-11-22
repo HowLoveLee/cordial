@@ -189,3 +189,10 @@ label {
 fieldset {
     width: 25%;
 }
+
+
+
+#calendar{
+    width:500px;
+    height: 300px;
+}

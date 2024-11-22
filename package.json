@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "vanilla-calendar-pro": "^3.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  }
+}
