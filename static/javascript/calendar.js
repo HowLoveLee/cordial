@@ -1,5 +1,6 @@
 import { Calendar } from 'vanilla-calendar-pro';
 import 'vanilla-calendar-pro/styles/index.css';
+
 // Function to calculate all weekends in the current year
 function calculateWeekends() {
   const today = new Date();
@@ -22,7 +23,6 @@ function calculateWeekends() {
   return weekends;
 }
 
-// Helper function to format date as 'YYYY-MM-DD'
 function formatDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -30,23 +30,25 @@ function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-// Calculate weekends dynamically
 const weekends = calculateWeekends();
 const options = {
   year: false,
-  disableDates:weekends,
+  disableDates: weekends,
   selectedTheme: 'light',
-    onClickDate(self) {
-    // Update the label with the selected date
+  onClickDate(self) {
     const selectedDates = self.context.selectedDates;
     const dateLabel = document.getElementById('date-selected-label');
+    const selectedDateInput = document.getElementById('selected-date-input'); // Get the hidden input element
+
     if (selectedDates.length > 0) {
-      dateLabel.textContent = `Date selected: ${selectedDates[0]}`;
+      const selectedDate = selectedDates[0];
+      dateLabel.textContent = selectedDate;
+      selectedDateInput.value = selectedDate; // Update the hidden input value
     } else {
-      dateLabel.textContent = `Date selected: None`;
+      dateLabel.textContent = `None`;
+      selectedDateInput.value = ''; // Clear the hidden input value
     }
   },
-
 };
 
 const calendar = new Calendar('#calendar', options);

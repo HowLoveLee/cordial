@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Cancel Appointment</h2>
+<p>Are you sure you want to cancel your appointment for <strong>{{ registration.exam.name }}</strong>?</p>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" name="confirm_cancel">Yes, Cancel Appointment</button>
+    <a href="{% url 'student_dashboard' %}" class="button">No, Skibidi back</a>
+</form>
+{% endblock %}

@@ -60,7 +60,7 @@ class Registration(models.Model):
 class StudentProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     registered_exam_count = models.IntegerField(default=0)  # Tracks registered exams
-
+    
     def registered_exams(self):
         return Registration.objects.filter(student=self.user).select_related('exam', 'location')
 
@@ -69,3 +69,7 @@ class StudentProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+    def save(self, *args, **kwargs):
+        if self.registered_exam_count > 3:
+            raise ValidationError("A student cannot register for more than 3 exams at a time.")
+        super().save(*args, **kwargs)

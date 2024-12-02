@@ -140,3 +140,7 @@ MEDIA_ROOT = '/webapps/cordial/cordial/media/'
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ['https://cordial-associates.com', 'https://www.cordial-associates.com']
+
+
+USE_TZ = True  # Ensure timezone support is enabled
+TIME_ZONE = 'UTC'  # Default server timezone, usually UTC

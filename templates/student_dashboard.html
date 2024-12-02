@@ -1,46 +1,79 @@
-
-<!DOCTYPE html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    </head>
-    <body>
-        
-        <script src="" async defer></script>
-    </body>
-</html>
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <h1>Welcome to your dashboard!</h1>
-    <p>Here you can manage your account and view your exam details.</p>
-    
-    <p>Hello, {{ user.first_name }}</p>
-    
-    <h2>Your Exam Slots</h2>
-    <ul>
-        <!-- Display registered exams -->
-        {% for exam in registered_exams %}
-            <li>
-                {{ exam.exam.name }} - {{ exam.selected_date }} at {{ exam.selected_time }}
-                (Location: {{ exam.location }})
-            </li>
-        {% endfor %}
+<h1>Welcome To Your Dashboard</h1>
+<p>Hello, {{ user.first_name }}</p>
+
+<h2>Exam Slots</h2>
+<ul>
+    {#  Creates the blocks in the student dashbaord for each exam. Checking if the student has any opened slots.  #}
+    {% for registration in registered_exams %}
+        <li>
+            <strong>{{ registration.exam.name }}</strong> - {{ registration.selected_date }} at {{ registration.selected_time }}
+            (Location: {{ registration.location.full_address }})
+            <div>
+                <a href="{% url 'cancel_registration' registration.id %}">Cancel Appointment</a> |
+                <a href="{% url 'reschedule_registration' registration.id %}">Reschedule Appointment</a> |
+                <a href="#" onclick="printExamDetails({{ registration.id }})">Print</a>
+            </div>
+        </li>
         
-        <!-- Display empty slots -->
-        {% for i in empty_slots_range %}
-            <li><a href="{% url 'exam_registration_process' %}">Empty Slot</a></li>
-        {% endfor %}
-    </ul>
+        <div id="printContent-{{ registration.id }}" style="display: none;">
+            <h2>Exam Details</h2>
+            <p><strong>Exam:</strong> {{ registration.exam.name }}</p>
+            <p><strong>Date:</strong> {{ registration.selected_date }}</p>
+            <p><strong>Time:</strong> {{ registration.selected_time }}</p>
+            <p><strong>Location:</strong> {{ registration.location.full_address }}</p>
+        </div>
+    {% endfor %}
+
+    {% for i in empty_slots_range %}
+        <li><a href="{% url 'exam_registration_process' %}">Empty Slot</a></li>
+    {% endfor %}
+</ul>
     
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Log Out</button>
-    </form>
+    {#  The Weather outside Is Rizzy and The Fire Is So Skibidi  #}
+{#I am still partially clueless on how this functions, but we are basically briding django to our html templates#}
+{#  We created a database based of models.py and we use those models as an import in views.py and pull the information we want.#}
+{#  I'm not partically sure how to push information from one page to another but  #}
+{#  Information was brought over with more views, its like a view that the info was created in and we forwarded that view information to the next view using another view.  #}
+{# If you reading this im sorry #}
 
+<p>Total Slots: 3</p>
+<p>Available Slots: {{ empty_slots }}</p>
+
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Log Out</button>
+</form>
+
+<script>
+    function printExamDetails(registrationId) {
+        const printContent = document.getElementById(`printContent-${registrationId}`).innerHTML;
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.open();
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Print Exam Details</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                        padding: 0;
+                    }
+                    h2 {
+                        text-align: center;
+                    }
+                </style>
+            </head>
+            <body onload="window.print(); window.close();">
+                ${printContent}
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+    }
+</script>
 {% endblock %}
-

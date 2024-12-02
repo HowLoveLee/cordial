@@ -137,3 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # alexp
 # jimmyshiro876@gmail.com
 # KingKong123
+
+USE_TZ = True  # Ensure timezone support is enabled
+TIME_ZONE = 'UTC'  # Default server timezone, usually UTC

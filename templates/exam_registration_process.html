@@ -1,147 +1,87 @@
 {% extends 'base.html' %}
 
-{% load static %}
-
 {% block content %}
-    <p>EXAM REGISTRATION PROCESS</p>
-    <button onclick="goBack()">Go Back</button>
-    
-    <div id="exam-list">
-        {% for exam in exams %}
-            <div class="exam-item">
-                <h3>{{ exam.name }}</h3>
-                <p><strong>Description:</strong> {{ exam.description }}</p>
-                <p><strong>Duration:</strong> {{ exam.duration }} minutes</p>
-                <p><strong>Locations:</strong></p>
-                <ul>
-                    {% for location in exam.locations.all %}
-                        <li>{{ location.name }} ({{ location.full_address }})</li>
-                    {% endfor %}
-                </ul>
-                <!-- Select button for each exam -->
-                <button onclick="selectExam('{{ exam.name }}')">Select this Exam</button>
-            </div>
-        {% endfor %}
-    </div>
+<div class="registration-process" id="registrationProcess">
+    <h1>Exam Registration</h1>
+    <a href="{% url 'student_dashboard' %}" class="button">No, Go Back</a>
 
-
-    <!-- Calendar container -->
-    <div id="calendar"></div>
-    <!-- Time Selection -->
-    <div id="time-selection">
-        <h2>Select a Time:</h2>
-        <div id="time-buttons"></div>
-    </div>
-    <br>
-    <br>
-        <!-- Selected exam label -->
-    <form method="POST" action="{% url 'exam_registration_process' %}">
+    <form method="POST" id="registrationForm">
         {% csrf_token %}
-        <label for="selected-exam">Selected Exam: </label>
-        <span id="selected-exam-label">None</span>
-        <input type="hidden" id="selected-exam-input" name="exam_name" value="">
-        <br>
-        <label for="selected-date">Selected Date: </label>
-        <span id="date-selected-label">None</span>
-        <input type="hidden" id="selected-date-input" name="exam_date" value="">
-        <br>
-        <label for="selected-time">Selected Time: </label>
-        <span id="time-selected-label">None</span>
-        <input type="hidden" id="selected-time-input" name="exam_time" value="">
-        <br>
-        <button type="submit" id="submit-button" >Submit</button>
+        
+        <!-- Select an Exam -->
+        <label for="exam_id">Select Exam:</label>
+        <select name="exam_id" id="examSelect" required>
+            <option value="">-- Select an Exam --</option>
+            {% for exam in exams %}
+            <option value="{{ exam.id }}">{{ exam.name }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Select a Location -->
+        <label for="location_id">Select Location:</label>
+        <select name="location_id" id="locationSelect" required>
+            <option value="">-- Select a Location --</option>
+        </select>
+
+        <!-- Select Date -->
+        <label for="selected_date">Select Date:</label>
+        <input type="date" name="selected_date" id="dateSelect" required>
+
+        <!-- Select Time -->
+        <label for="selected_time">Select Time:</label>
+        <select name="selected_time" id="timeSelect" required>
+            <option value="">-- Select a Time --</option>
+        </select>
+
+        <button type="submit">Register</button>
     </form>
+</div>
 
-    <script>
-    // Function to go back
-function goBack() {
-    window.history.back();
-}
+<div class="confirmation" id="confirmation" style="display: none;">
+    <h1>Registration Confirmation</h1>
+    <p><strong>Exam:</strong> <span id="confirmExam"></span></p>
+    <p><strong>Location:</strong> <span id="confirmLocation"></span></p>
+    <p><strong>Date:</strong> <span id="confirmDate"></span></p>
+    <p><strong>Time:</strong> <span id="confirmTime"></span></p>
+    <button onclick="goToDashboard()">Back to Dashboard</button>
+</div>
 
-// Function to select an exam
-function selectExam(examName) {
-    const selectedExamLabel = document.getElementById('selected-exam-label');
-    const selectedExamInput = document.getElementById('selected-exam-input');
-    const submitButton = document.getElementById('submit-button');
-
-    // Update exam selection
-    selectedExamLabel.textContent = examName;
-    selectedExamInput.value = examName;
-
-    // Check if all fields are filled
-    enableSubmitButton();
-}
-
-// Function to handle date selection
-document.addEventListener('DOMContentLoaded', () => {
-    const calendar = new VanillaCalendar('#calendar', {
-        actions: {
-            clickDay(e, selectedDate) {
-                const selectedDateLabel = document.getElementById('date-selected-label');
-                const selectedDateInput = document.getElementById('selected-date-input');
-
-                // Update date selection
-                selectedDateLabel.textContent = selectedDate;
-                selectedDateInput.value = selectedDate;
-
-                // Check if all fields are filled
-                enableSubmitButton();
-            },
-        },
-    });
-    calendar.init();
-});
-
-// Function to generate time buttons in 12-hour format
-function generateTimeButtons(startHour, endHour, intervalMinutes) {
-    const timeButtonsContainer = document.getElementById('time-buttons');
-    const selectedTimeLabel = document.getElementById('time-selected-label');
-    const selectedTimeInput = document.getElementById('selected-time-input');
-
-    for (let hour = startHour; hour <= endHour; hour++) {
-        const period = hour >= 12 ? 'PM' : 'AM';
-        const displayHour = hour > 12 ? hour - 12 : hour;
-
-        for (let minutes = 0; minutes < 60; minutes += intervalMinutes) {
-            const formattedTime = `${displayHour}:${minutes.toString().padStart(2, '0')} ${period}`;
-            const button = document.createElement('button');
-
-            button.className = 'time-index';
-            button.textContent = formattedTime;
-            button.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                // Update time selection
-                selectedTimeLabel.textContent = formattedTime;
-                selectedTimeInput.value = formattedTime;
-
-                // Check if all fields are filled
-                enableSubmitButton();
-            });
-
-            timeButtonsContainer.appendChild(button);
+<script>
+    document.getElementById("examSelect").addEventListener("change", function () {
+        const examId = this.value;
+    
+        if (!examId) {
+            // Clear locations and times if no exam is selected
+            document.getElementById("locationSelect").innerHTML = '<option value="">-- Select a Location --</option>';
+            document.getElementById("timeSelect").innerHTML = '<option value="">-- Select a Time --</option>';
+            return;
         }
-    }
-}
-
-// Enable submit button if all inputs are filled
-function enableSubmitButton() {
-    const examInput = document.getElementById('selected-exam-input').value;
-    const dateInput = document.getElementById('selected-date-input').value;
-    const timeInput = document.getElementById('selected-time-input').value;
-
-    const submitButton = document.getElementById('submit-button');
-
-    // Enable button if all fields are filled
-    if (examInput && dateInput && timeInput) {
-        submitButton.disabled = false;
-    } else {
-        submitButton.disabled = true;
-    }
-}
-
-// Generate time buttons from 7:00 AM to 4:00 PM with 30-minute intervals
-generateTimeButtons(7, 16, 30);
-
-    </script>
+    
+        // Fetch locations and times dynamically
+        fetch(`/get_locations/${examId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const locationSelect = document.getElementById("locationSelect");
+                locationSelect.innerHTML = '<option value="">-- Select a Location --</option>';
+                data.locations.forEach(location => {
+                    locationSelect.innerHTML += `<option value="${location.id}">${location.name}</option>`;
+                });
+    
+                const timeSelect = document.getElementById("timeSelect");
+                timeSelect.innerHTML = '<option value="">-- Select a Time --</option>';
+                data.available_times.forEach(time => {
+                    timeSelect.innerHTML += `<option value="${time}">${time}</option>`;
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching locations and times:', error);
+            });
+    });
+    
+</script>
 {% endblock %}

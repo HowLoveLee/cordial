@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Reschedule Appointment</h2>
+<p>Reschedule your appointment for <strong>{{ registration.exam.name }}</strong>.</p>
+<form method="POST">
+    {% csrf_token %}
+    <label for="new_date">New Date:</label>
+    <input type="date" name="new_date" id="new_date" required>
+
+    <label for="new_time">New Time:</label>
+    <select name="new_time" id="new_time" required>
+        <option value="">-- Select a Time --</option>
+        {% for time in available_times %}
+            <option value="{{ time }}">{{ time }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" name="confirm_reschedule">Save Changes</button>
+    <a href="{% url 'student_dashboard' %}" class="button">Cancel</a>
+</form>
+{% endblock %}

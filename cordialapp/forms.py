@@ -59,8 +59,7 @@ class RegistrationForm(forms.ModelForm):
             'required': True,
 
         }),
-        min_length=10,
-        max_length=20,
+   
     )
     class Meta:
         model = User
@@ -81,7 +80,6 @@ class LoginForm(forms.Form):
             'placeholder': 'NSHE ID',
             'required': True,
         }),
-        min_length=10,
-        max_length=20,
+
 
     )

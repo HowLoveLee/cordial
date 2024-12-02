@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block content %}
+<h1>Registration Confirmation</h1>
+
+<p><strong>Exam:</strong> {{ registration.exam.name }}</p>
+<p><strong>Description:</strong> {{ registration.exam.description }}</p>
+<p><strong>Date:</strong> {{ registration.selected_date }}</p>
+<p><strong>Time:</strong> {{ registration.selected_time }}</p>
+<p><strong>Location:</strong> {{ registration.location }}</p>
+<li><strong>Registration Date:</strong> {{ registration_date_localized|date:"D, M j, Y, g:i a" }}</li>
+
+<h2>What would you like to do next?</h2>
+<ul>
+    <li><a href="{% url 'student_dashboard' %}">Back to Dashboard</a></li>
+    <li><a href="{% url 'cancel_registration' registration.id %}">Cancel Registration</a></li>
+    <li><a href="{% url 'reschedule_registration' registration.id %}">Reschedule</a></li>
+</ul>
+{% endblock %}
