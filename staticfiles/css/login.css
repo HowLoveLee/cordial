@@ -10,52 +10,54 @@ body {
     align-items: center;
     min-height: 100vh;
     min-height: 100vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url('images/login.webp');
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url('/static/images/login.webp');
     background-size: cover;
     background-position: center;
 }
-.wrapper {
+#wrapper {
     width: 500px;
-    height: 430px;
+    height: 490px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .5);
     backdrop-filter: blur;
     color: white;
     border-radius: 10px;
 }
-.wrapper h1 {
+#wrapper h1 {
     font-size: 36px;
     text-align: center;
     color: white;
-    padding: 50px 60px 0px 60px;
+   padding: 50px 60px 0 60px;
 }
-.wrapper .login-input {
+
+#wrapper .login-input, #wrapper .register-input {
     position: relative;
     width: 100%;
     height: 50px;
-    margin: 30px 0;
+    margin: 15px 0;
     padding: 0px 60px 0px 60px;
 }
-.login-input input {
+.login-input input, .register-input input {
     width: 100%;
     height: 100%;
     color: white;
     font-size: 15px;
     background: transparent;
-    border: none;
     outline: none;
     border: 2px solid rgba(255, 255, 255, .2);
     border-radius: 30px;
     padding: 20px 45px 20px 20px;
 }
-.login-input i {
+.register-input input ::placeholder {
+    color: rgba(255, 255, 255, .5);
+}
+.login-input i, .register-input i {
     position: absolute;
     right: 80px;
     top: 50%;
     transform: translateY(-50%)
 }
-
-#loginBtn {
+#loginBtn, #registerBtn {
     width: 78%;
     height: 45px;
     background: #01478E;
@@ -69,12 +71,49 @@ body {
     color: 600;
     margin-left: 11%;
 }
+#loginBtn a, #registerBtn a {
+    color: white;
+}
 
-.login-img img {
+.csn-link{
+display: flex;
+    justify-content: center;
+    align-items: center;
+        margin: 0 auto;
+        width: 155px;
+    height: 75px;
+    opacity: 85%;
+}
+.csn-link img{
     width: 155px;
     height: 75px;
     opacity: 85%;
+    margin:0;
+
+}
+
+#login-form p, #register-form p {
+    cursor: pointer;
     text-align: center;
-    padding: 8px 15px 0px 0px;
+    color: whitesmoke;
+    text-decoration: underline;
+}
+#register-form {
+    display: none;
+}
+#createAccount, #login {
+    margin: 35px 0px 20px 0px;
+}
+.reg-link{
+        margin: 15px 0px 20px 0px !important;
+
+}
+.register-input input, .login-input input {
+    background: rgba(0, 0, 0, 0.27);
+}
+
+
+.reg-title{
+       padding: 20px 60px 0 60px !important;
 }
 

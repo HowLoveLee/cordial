@@ -7,10 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
     {#  Internal CSS#}
+    {% if request.path == '/' %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
+    {% elif request.path == '/QASupport/' %}
+    <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+    {% endif %}
 
     {# External CSS #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -22,13 +25,15 @@
 {# Calender #}
 <link rel="stylesheet" href="{% static 'javascript/dist/assets/calendar-CTDkUHhy.css' %}">
 
-
+<style>
+    .wrapper {
+        background-image: url("static/images/csn.jpg");
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url('static/images/coyote.jpeg');
+</style>
 </head>
 <body>
-    <main>
         {% block content %}
         {% endblock %}
-    </main>
 <script type="module" src="{% static 'javascript/dist/assets/calendar-BFOXfLTj.js' %}"></script>
 
 </body>

@@ -3,114 +3,112 @@
 {% block title %}Cordial-Associates{% endblock %}
 
 {% block content %}
-<body>
-    <div class="wrapper">
-        <header>
-            <img src={% static 'images/logo.png.webp'%}  width="320" height="90" alt="">
-            <nav>
-                <ul>
-                    <li><a href="#campus-header">Campuses</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                   <li>
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'student_dashboard' %}" id="active">Book Now</a>
-                        {% else %}
-                            <a href="{% url 'login' %}" id="active">Book Now</a>
-                        {% endif %}
-                    </li>
+<div class="wrapper">
+    <header>
+        <a href="{%url 'landing' %}"><img src="{% static 'images/logo.png.webp'%}" width="320" height="90"></a>
+        <nav>
+        <ul class="sidebar">
+            <li id="closeMenu" onclick="closeSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" class="test" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
+            <li style="padding-top: 10px;"><a href="campus.html">Campuses</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="#contact-info">Contact</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'student_dashboard' %}" id="active">Login</a>
+                {% else %}
+                    <a href="{% url 'login' %}" id="active">Login</a>
+                {% endif %}
+            </li>
+        </ul>
+        <ul>
+            <li class="mainNav"><a href="campus.html">Campuses</a></li>
+            <li class="mainNav"><a href="{% url 'support_QA'%}">FAQ</a></li>
+            <li class="mainNav"><a href="#contact-inner">Contact</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                <li> <a class="mainNav" href="{% url 'student_dashboard' %}" id="active">Login</a></li>
+                {% else %}
+                    <li><a class="mainNav" href="{% url 'login' %}" id="active">Login</a></li>
+                {% endif %}
+            </li>
+            <li id="openMenu" onclick="showSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 1000" width="24px" fill="black"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+        </ul>
+    </nav>
+    </header>
+    <div id="box">
+        <p>Welcome to the CSN Online Exam Registration System website!</p>
+        <p>Please feel free to explore, book your exams, and manage your registrations with ease.</p>
+        <p>Our job here at CSN is to assist you in every step of your academic journey. Let us help you succeed.</p>
+    </div>
+    <div id="slogan">.
+        <h1>Investing in <span style="color: #01478E">our</span> future <br>
+        <span style="color: #FFD51D">Students First.</span></h1>
+    </div>
+</div>
 
-                </ul>
-            </nav>
-        </header>
-        <div id="box">
-            <p>Welcome to the CSN Online Exam Registration System website!</p>
-            <p>Please feel free to explore, book your exams, and manage your registrations with ease.</p>
-            <p>Our job here at CSN is to assist you in every step of your academic journey. Let us help you succeed.</p>
-        </div>
-        <div id="slogan">.
-            <h1>Investing in <span style="color: #01478E">our</span> future <br>
-            <span style="color: #FFD51D">Students First.</span></h1>
-        </div>
+<div class="bookApp">
+<img src="{% static 'images/exam.png'%}" width="270px" height="270px">
+<div id="book-inner">
+    <button id="bookbtn"><a href="#">Learn More</a></button>
+    <h1>Book <span style="color: #FFD51D">an</span> appointment</h1>
+    <div id="tips">
+        <p style="margin-top: 5%;">Please use your full name and NSHE ID when completing your appointment.</p>
+        <p>Use your provided CSN email for further confirmation and updates.</p>
+        <p>Use your phone number for further confirmation and updates.</p>
+        <p style="margin-bottom: 15%;">Clarify which campus you would like to be registering with for you exam.</p>
+    </div>
+</div>
+</div>
+<!--
+<div id="campuses">
+    <h1 style="border: none">North Las Vegas Campus</h1>
+    <img src="images/nlv.webp" width="450px" height="300px"><br>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3218.7984159072166!2d-115.10727282418807!3d36.220094372418274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8c2b7e6c9cdf7%3A0xc582e92247f9fec8!2sCollege%20of%20Southern%20Nevada%20North%20Las%20Vegas%20Campus!5e0!3m2!1sen!2sus!4v1727591601374!5m2!1sen!2sus" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <h1>West Charleston Campus</h1>
+    <img src="images/wc.jpg" width="450px" height="300px"><br>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6442.880211076526!2d-115.23710841654045!3d36.155843601370734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8c11e9d5d9ff3%3A0x27dcc6b90634ddac!2sCollege%20of%20Southern%20Nevada!5e0!3m2!1sen!2sus!4v1727592048238!5m2!1sen!2sus" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>           
+    <h1>Henderson Campus</h1>
+    <img src="images/henderson.jpg" width="450px" height="300px"><br>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3227.560065034178!2d-114.97014992434995!3d36.006614572483976!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8d43822ca62cb%3A0xa7633d49e12c6725!2sCollege%20of%20Southern%20Nevada%20Henderson%20Campus!5e0!3m2!1sen!2sus!4v1727592073335!5m2!1sen!2sus" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+-->
+
+<div class="contact">
+    <div id="contact-info">
+        <h1>Contact Us</h1>
+        <p>Have trouble or any questions?</p>
+        <p>Fill out some basic info and we will be in touch shortly.</p>
+        <p>We're excited to hear from you!</p>
+        <img src="{%static 'images/coyoteplan.png' %}" width="250px" height="260px">
     </div>
 
-    <div class="book">
-        <div id="appointment">
-            <img src={% static 'images/exam.png'%} width="250px" height="250px">
-            <button id="bookbtn"><a href="#">Learn More</a></button>
-            <h1>Book <span style="color: #FFD51D">an</span> appointment</h1>
-            <div id="tips">
-                <p style="margin-top: 5%;">Please use your full name and NSHE ID when completing your appointment.</p>
-                <p>Use your provided CSN email for further confirmation and updates.</p>
-                <p>Use your phone number for further confirmation and updates.</p>
-                <p style="margin-bottom: 15%;">Clarify which campus you would like to be registering with for you exam.</p>
-            </div>
-        </div>
+    <div id="contact-form">
+        <form>
+            <table>
+                <tr>
+                    <td><p>Name <span style="color: black;">(required)</span></p></td>
+                </tr>
+                <tr>
+                    <td><label for="fname">First Name:</label></td>
+                    <td><label for="lname">Last Name:</label></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="fname" name="fname" required></td>
+                    <td><input type="text" id="lname" name="lname" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email <span style="color: black">(required)</span></label><br>
+                    <input type="email" id="email" name="email" required></td> 
+                </tr>
+                <tr>
+                    <td><label for="message">Message:</label><br>
+                    <textarea id="message" rows="10" col="50" required></textarea></td>
+                </tr>
+                <tr>
+                    <td><button type="submit" id="submitBtn">Submit</button></td>
+                </tr>
+            </table>
+        </form>
     </div>
-
-        <div id="contact">
-            <div id="contact-info">
-                <h1>Contact Us</h1>
-                <p>Have trouble or any questions?</p>
-                <p>Fill out some basic info and we will be in touch shortly.</p>
-                <p>We're excited to hear from you!</p>
-                <img src={% static 'images/coyoteplan.png'%}  width="250px" height="260px">
-            </div>
-            <div id="contactform">
-                <form>
-                    <table>
-                        <tr>
-                            <p>Name <span style="color: black;">(required)</span></p>
-                            <br>
-                            <td><label for="fname">First Name:</label></td>
-                            <td><label for="lname">Last Name:</label></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" id="fname" name="fname" required></td>
-                            <td><input type="text" id="lname" name="lname" required></td>
-                        </tr>
-                        <tr>
-                            <td><label for="email">Email <span style="color: black">(required)</span></label><br>
-                            <input type="email" id="email" name="email" required></td> 
-                        </tr>
-                        <tr>
-                            <td><label for="message">Message:</label><br>
-                            <textarea id="message" rows="10" col="50" required></textarea></td>
-                        </tr>
-                        <tr>
-                            <td><button type="submit" id="submitBtn">Submit</button></td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-        </div>
-
-    <div id="campus-header">
-        <h1>Our Locations</h1>
-    </div>
-    <div id="campuses">
-        <div class="campus">
-            <img id="nlvPic" src={% static "images/nlv.webp"%} width="350px" height="240px" onclick="mapNLV()">
-            <h1>North Las Vegas Campus</h1>
-            <iframe id="nlv" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3218.773949842974!2d-115.10797472433983!3d36.22068897241794!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8c2b7e6c9cdf7%3A0xc582e92247f9fec8!2sCollege%20of%20Southern%20Nevada%20North%20Las%20Vegas%20Campus!5e0!3m2!1sen!2sus!4v1730964542860!5m2!1sen!2sus" width="350" height="240" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-        <div class="campus">
-            <img id="wcPic" src={% static "images/wc.jpg"%} width="350px" height="240px" onclick="mapWC()">
-            <h1>West Charleston Campus</h1>
-            <iframe id="wccampus" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6442.880211076523!2d-115.23710841654056!3d36.15584360137077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8c11e9d5d9ff3%3A0x27dcc6b90634ddac!2sCollege%20of%20Southern%20Nevada!5e0!3m2!1sen!2sus!4v1730964585095!5m2!1sen!2sus" width="350" height="240" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-        <div class="campus">
-            <iframe id="henderson" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6455.120130068349!2d-114.97014992434995!3d36.00661457248406!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8d43822ca62cb%3A0xa7633d49e12c6725!2sCollege%20of%20Southern%20Nevada%20Henderson%20Campus!5e0!3m2!1sen!2sus!4v1730964605762!5m2!1sen!2sus" width="350" height="240" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <img id="hPic" src={% static "images/henderson.jpg"%} width="350" height="240" onclick="mapH()">
-            <h1>Henderson Campus</h1>
-        </div>
-    </div>
-
-
-
-
-
-
-
-    </body>
+</div>
 {% endblock %}

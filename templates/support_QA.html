@@ -1,6 +1,166 @@
-<!DOCTYPE html>
-<html>
-<body>
-<p>GO ahead and burn this page and replace it with yours</p>
-</body>
-</html>
+{%  extends 'base.html' %}
+{% load static %}
+{% block title %}Cordial-Associates{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+    <header>
+        <a href="{%url 'landing' %}"><img src="{% static 'images/logo.png.webp'%}" width="320" height="90"></a>
+        <nav>
+        <ul class="sidebar">
+            <li id="closeMenu" onclick="closeSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" class="test" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
+            <li style="padding-top: 10px;"><a href="campus.html">Campuses</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="#contact-info">Contact</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'student_dashboard' %}" id="active">Login</a>
+                {% else %}
+                    <a href="{% url 'login' %}" id="active">Login</a>
+                {% endif %}
+            </li>
+        </ul>
+        <ul>
+            <li class="mainNav"><a href="campus.html">Campuses</a></li>
+            <li class="mainNav"><a href="{% url 'support_QA'%}">FAQ</a></li>
+            <li class="mainNav"><a href="#contact-inner">Contact</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                <li> <a class="mainNav" href="{% url 'student_dashboard' %}" id="active">Login</a></li>
+                {% else %}
+                    <li><a class="mainNav" href="{% url 'login' %}" id="active">Login</a></li>
+                {% endif %}
+            </li>
+            <li id="openMenu" onclick="showSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 1000" width="24px" fill="black"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+        </ul>
+    </nav>
+    </header>
+  <ul id="questions">
+    <h2 id="faqTitle">Frequently Asked Questions</h2>
+    <br><br>
+    <h3 id="title">General Questions</h3><br>
+    <li>
+      <label for="q1">Q: What is the purpose of the Exam Registration System? <span>&#x3e</span></label>
+      <input type="radio" name="questions" id="q1">
+      <div class="content">
+          <p>A: This system allows students to register for certification exams, select available dates, time slots, locations, and receive confirmation emails. Faculty can also log in to manage exams and view reports.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q2">Q: How do I register for an account? <span>&#x3e</span></label>
+      <input type="radio" name="questions" id="q2">
+      <div class="content">
+        <p>A: Navigate to the Home Page and Click on the 'Book Now' button near the top right corner. If not yet registered, you will be re-directed to our Log-In Page. Fill in the appropriate credentials as follows:</p>
+          <br>
+          <p>Username: First Name and the Last Four Digits of your NSHE Number.</p>
+          <p>Password: your Full NSHE Number.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q3">Q: How do I access the system? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q3">
+      <div class="content">
+        <p>A: Log in with your First Name and Last Four Digits of Your NSHE Number as your Username, and your Full NSHE Number as your Password. If you are still experiencing issues, contact support at [support@csn.edu]</p>
+      </div>
+    </li>
+    <li>
+      <label for="q4">Q: Can both students and faculty access the system? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q4">
+      <div class="content">
+        <p>A: Yes. Students can register for exams, and faculty members have separate login functionality to manage and view exam details.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q5">Q: How long is each exam? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q5">
+      <div class="content">
+        <p>A: Exam durations are scheduled for one-hour sessions.</p>
+      </div>
+    </li>
+
+    <br><h3 id="title">Registration Process</h3><br>
+    <li>
+      <label for="q6">Q: How do I register for an exam? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q6">
+      <div class="content">
+        <p>A: Log in, navigate to the Home Page, and click on the 'Book Now' button.</p><br>
+        <p>From there, Select your Campus Location and Exam Category then choose an available Date and Time to complete registration.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q7">Q: Can I register for more than one exam? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q7">
+      <div class="content">
+        <p>A: Yes, you can register for up to three different exams. However, you cannot register for the same exam more than once on the same day.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q8">Q: How will I know my registration is confirmed? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q8">
+      <div class="content">
+        <p>A: You will receive a confirmation email shortly after completing your registration. This email includes the exam details, location, and additional instructions.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q9">Q: What happens if the exam time I want is full? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q9">
+      <div class="content">
+        <p>A: Once an exam time is full (20 seats are booked), it will no longer be available. You will need to select a different time or date.</p>
+      </div>
+    </li>
+
+    <br><h3 id="title">Exam Day Information</h3><br>
+    <li>
+      <label for="q10">Q: What should I bring on exam day? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q10">
+      <div class="content">
+        <p>A: Bring a valid photo ID and any required materials specified for your exam. Check your confirmation email for specific instructions.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q11">Q: How do I find my exam location? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q11">
+      <div class="content">
+        <p>A: The exam location, including the Building and Room Number, will be listed in your confirmation email. Please arrive at least 15 minutes early.</p>
+      </div>
+    </li>
+
+    <br><h3 id="title">Rescheduling and Cancellations</h3><br>
+    <li>
+      <label for="q12">Q: Can I reschedule my exam? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q12">
+      <div class="content">
+        <p>A: Yes. You can reschedule your exam up to 24 hours before the scheduled time. Same-day rescheduling is not permitted.</p>
+      </div>
+    </li>
+    <li>
+      <label for="q13">Q: How do I cancel my registration? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q13">
+      <div class="content">
+        <p>A: To cancel your registration, log in, navigate the Home Page to 'Registration History', and select the exam you want to cancel. Confirm the cancellation to complete the process.</p>
+      </div>
+    </li>
+
+    <br><h3 id="title">Technical Support and Faculty Access</h3><br>
+    <li>
+      <label for="q14">Q: What if I can’t log into the system? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q14">
+      <div class="content">
+        <p>A: Ensure you are entering your Username and NSHE Number correctly. If you still experience issues, contact support at [support@csn.edu].</p>
+      </div>
+    </li>
+    <li>
+      <label for="q15">Q: How can faculty members access the system? <span>&#x3e;</span></label>
+      <input type="radio" name="questions" id="q15">
+      <div class="content">
+        <p>A: Faculty members can log in using the exact same methods as the students or with their CSN email as the username. Faculty-specific features, such as managing exams, are available upon login.</p>
+      </div>
+    </li>
+  </ul>
+
+    <script src="script.js" async defer></script>
+  </body>
+  <footer>
+    <p>&copy; 2024 CSN Exam Registration System. All rights reserved.</p>
+  </footer>
+  {% endblock %}
