@@ -201,7 +201,6 @@ def reschedule_registration(request, registration_id):
                 registration.selected_time = new_time
                 registration.clean()  # Validate the updated registration
                 registration.save()
-                messages.success(request, "Appointment successfully rescheduled.")
                 return redirect(reverse('exam_registration_confirmation', kwargs={'registration_id': registration.id}))
             except ValidationError as e:
                 messages.error(request, str(e))
