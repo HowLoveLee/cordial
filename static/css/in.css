@@ -1,0 +1,120 @@
+body, nav,
+nav a,
+nav p,
+nav button {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 15px 6% 15px 3%;
+    background-color: white;
+    opacity: 95%;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+
+    text-align: center;
+}
+
+nav a,
+nav p,
+nav button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    font-size: 1.2em;
+    line-height: 1; 
+    margin: 0;
+    padding: 0 20px; 
+    border: none; 
+    color: white;
+    white-space: nowrap; 
+    text-decoration: none;
+}
+
+nav a {
+    background-color: #0056b3;
+    border-top-left-radius: 32px;
+    border-bottom-left-radius: 32px;
+}
+
+nav p {
+    background-color: #276B3E;
+    color: white;
+}
+
+nav button {
+    background-color: #FFD51D;
+    border-top-right-radius: 32px;
+    border-bottom-right-radius: 32px;
+    cursor: pointer;
+    color:black;
+
+}
+
+nav button:hover {
+    background-color: red;
+    color: black;
+}
+
+
+ul{
+    background-color: #EFF5FA;
+    width: fit-content;
+    padding:25px;
+    padding-bottom: 1px;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+li {
+    background-color: white;
+    margin-bottom: 25px;
+    list-style: none;
+    padding:25px;
+    width:400px;
+}
+strong{
+    text-align: center;
+}
+
+.center-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.actions{
+    margin-top: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+}
+.blue, .red, .print{
+    padding:15px;
+    text-decoration: none;
+
+}
+ 
+.blue{
+background-color: #0056b3;
+color:white;
+}
+
+.red{
+    background-color: red;
+    color:white;
+}
+.print{
+    background-color: #276B3E;
+    color:white;
+}

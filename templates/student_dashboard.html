@@ -1,20 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1>Welcome To Your Dashboard</h1>
-<p>Hello, {{ user.first_name }}</p>
-
-<h2>Exam Slots</h2>
+    <header>
+        <a href="{%url 'landing' %}"><img src="{% static 'images/logo.png.webp'%}" width="320" height="90"></a>
+        <nav>
+            <a href="{% url 'landing' %}#contact-info" class="scroll">Contact</a>
+            <p>Hello, {{ user.first_name }}</p>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Log Out</button>
+            </form>
+        </nav>
+    </header>
 <ul>
     {#  Creates the blocks in the student dashbaord for each exam. Checking if the student has any opened slots.  #}
     {% for registration in registered_exams %}
         <li>
-            <strong>{{ registration.exam.name }}</strong> - {{ registration.selected_date }} at {{ registration.selected_time }}
-            (Location: {{ registration.location.full_address }})
-            <div>
-                <a href="{% url 'cancel_registration' registration.id %}">Cancel Appointment</a> |
-                <a href="{% url 'reschedule_registration' registration.id %}">Reschedule Appointment</a> |
-                <a href="#" onclick="printExamDetails({{ registration.id }})">Print</a>
+            <div class="center-content">
+                <strong>{{ registration.exam.name }}</strong>
+            </div>
+            
+            <p>Date and Time: {{ registration.selected_date }}  at {{ registration.selected_time }}</p>
+            <p>Location: {{ registration.location.full_address }}</p>
+            <div class="center-content">
+                <button onclick="toggleExtraInfo(this)">Click for Description Details</button>
+                <p id="extra-info" style="display:none;">{{ registration.exam.description }}</p>
+
+
+            </div>
+      
+            
+            <div class="actions " >
+                <a class="blue" href="{% url 'reschedule_registration' registration.id %}">Reschedule</a>
+                <a class="red" href="{% url 'cancel_registration' registration.id %}">Cancel</a>
+                <a class="print" href="#" onclick="printExamDetails({{ registration.id }})">Print</a>                
             </div>
         </li>
         
@@ -24,28 +43,14 @@
             <p><strong>Date:</strong> {{ registration.selected_date }}</p>
             <p><strong>Time:</strong> {{ registration.selected_time }}</p>
             <p><strong>Location:</strong> {{ registration.location.full_address }}</p>
+            <p><strong>Description:</strong> {{ registration.exam.description }}</p>
         </div>
+        
     {% endfor %}
-
     {% for i in empty_slots_range %}
         <li><a href="{% url 'exam_registration_process' %}">Empty Slot</a></li>
     {% endfor %}
 </ul>
-    
-    {#  The Weather outside Is Rizzy and The Fire Is So Skibidi  #}
-{#I am still partially clueless on how this functions, but we are basically briding django to our html templates#}
-{#  We created a database based of models.py and we use those models as an import in views.py and pull the information we want.#}
-{#  I'm not partically sure how to push information from one page to another but  #}
-{#  Information was brought over with more views, its like a view that the info was created in and we forwarded that view information to the next view using another view.  #}
-{# If you reading this im sorry #}
-
-<p>Total Slots: 3</p>
-<p>Available Slots: {{ empty_slots }}</p>
-
-<form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Log Out</button>
-</form>
 
 <script>
     function printExamDetails(registrationId) {
@@ -74,6 +79,18 @@
             </html>
         `);
         printWindow.document.close();
+    }
+        // Function to toggle the visibility of the extra-info paragraph
+    function toggleExtraInfo(button) {
+        // Find the next sibling of the button, which is the extra-info paragraph
+        const extraInfo = button.nextElementSibling;
+        if (extraInfo.style.display === "none" || extraInfo.style.display === "") {
+            extraInfo.style.display = "block"; // Show the paragraph
+            button.textContent = "Hide Description Details"; // Change button text
+        } else {
+            extraInfo.style.display = "none"; // Hide the paragraph
+            button.textContent = "Click for Description Details"; // Reset button text
+        }
     }
 </script>
 {% endblock %}

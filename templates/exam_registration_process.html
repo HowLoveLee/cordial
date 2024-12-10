@@ -7,34 +7,41 @@
 
     <form method="POST" id="registrationForm">
         {% csrf_token %}
+        <div class="container exam-select" id="container1">
+            <!-- Select an Exam -->
+            <label for="exam_id">Select Exam:</label>
+            <select name="exam_id" id="examSelect" required>
+                <option value="">-- Select an Exam --</option>
+                {% for exam in exams %}
+                <option value="{{ exam.id }}">{{ exam.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" class="next-btn">Next</button>
+        </div>
         
-        <!-- Select an Exam -->
-        <label for="exam_id">Select Exam:</label>
-        <select name="exam_id" id="examSelect" required>
-            <option value="">-- Select an Exam --</option>
-            {% for exam in exams %}
-            <option value="{{ exam.id }}">{{ exam.name }}</option>
-            {% endfor %}
-        </select>
-
-        <!-- Select a Location -->
-        <label for="location_id">Select Location:</label>
-        <select name="location_id" id="locationSelect" required>
-            <option value="">-- Select a Location --</option>
-        </select>
-
-        <!-- Select Date -->
-        <label for="selected_date">Select Date:</label>
-        <input type="date" name="selected_date" id="dateSelect" required>
-
-        <!-- Select Time -->
-        <label for="selected_time">Select Time:</label>
-        <select name="selected_time" id="timeSelect" required>
-            <option value="">-- Select a Time --</option>
-        </select>
-
-        <button type="submit">Register</button>
+        <div class="container location-select" id="container2" style="display: none;">
+            <button type="button" class="back-btn">Back</button>
+            <label for="location_id">Select Location:</label>
+            <select name="location_id" id="locationSelect" required>
+                <option value="">-- Select a Location --</option>
+            </select>
+            <button type="button" class="next-btn">Next</button>
+        </div>
+        
+        <div class="container date-select" id="container3" style="display: none;">
+            <button type="button" class="back-btn">Back</button>
+            <!-- Select Date -->
+            <label for="selected_date">Select Date:</label>
+            <input type="date" name="selected_date" id="dateSelect" required>
+            <!-- Select Time -->
+            <label for="selected_time">Select Time:</label>
+            <select name="selected_time" id="timeSelect" required>
+                <option value="">-- Select a Time --</option>
+            </select>
+            <button type="submit">Register</button>
+        </div>
     </form>
+    
 </div>
 
 <div class="confirmation" id="confirmation" style="display: none;">
@@ -81,6 +88,51 @@
             .catch(error => {
                 console.error('Error fetching locations and times:', error);
             });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateInput = document.querySelector("#dateSelect");
+        
+        // Initialize Flatpickr
+        const flatpickrInstance = flatpickr(dateInput, {
+            dateFormat: "Y-m-d", // Backend-compatible format
+            minDate: "today",    // Prevent past dates
+        });
+    
+        // Open the calendar by default
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const containers = document.querySelectorAll(".container"); // Select all containers
+        let currentContainerIndex = 0; // Start with the first container
+    
+        function showContainer(index) {
+            // Hide all containers
+            containers.forEach((container, i) => {
+                container.style.display = i === index ? "block" : "none";
+            });
+        }
+    
+        // Add event listeners for "Next" buttons
+        document.querySelectorAll(".next-btn").forEach((btn, index) => {
+            btn.addEventListener("click", function () {
+                if (currentContainerIndex < containers.length - 1) {
+                    currentContainerIndex++;
+                    showContainer(currentContainerIndex);
+                }
+            });
+        });
+    
+        // Add event listeners for "Back" buttons
+        document.querySelectorAll(".back-btn").forEach((btn, index) => {
+            btn.addEventListener("click", function () {
+                if (currentContainerIndex > 0) {
+                    currentContainerIndex--;
+                    showContainer(currentContainerIndex);
+                }
+            });
+        });
+    
+        // Show the first container initially
+        showContainer(currentContainerIndex);
     });
     
 </script>
