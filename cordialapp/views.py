@@ -6,10 +6,12 @@ from cordialapp.forms import RegistrationForm, LoginForm
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Exam, Registration, Location
+from .models import Exam, Registration, Location, StudentLog
 from django.urls import reverse
 from django.http import JsonResponse
 from django.utils import timezone
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 def landing(request):
     return  render(request, 'landing.html')
@@ -22,15 +24,22 @@ def login(request):
             if register_form.is_valid():
                 first_name = register_form.cleaned_data.get('first_name')
                 last_name = register_form.cleaned_data.get('last_name')
-                email = register_form.cleaned_data.get('email')
                 nshe_id = register_form.cleaned_data.get('nshe_id')
-                password = register_form.cleaned_data.get('password')
+                password = nshe_id  # Password is set to the full NSHE ID
 
-                if not email.endswith('@student.csn.edu'):
-                    messages.error(request, 'Email must end with @student.csn.edu.')
+                # Combine NSHE ID with the domain to create email
+                email = f"{nshe_id}@student.csn.edu"
+
+                # Check if the email already exists
+                if User.objects.filter(email=email).exists():
+                    messages.error(request, 'This email is already registered. Please use a different email.')
                     return render(request, 'login.html', {'register_form': register_form, 'login_form': login_form})
 
-                username = f"{first_name}{nshe_id}"
+                # Extract the last 4 digits of the NSHE ID
+                last_four_nshe = nshe_id[-4:]
+
+                # Generate a username with First Name + last 4 of NSHE ID
+                username = f"{first_name}{last_four_nshe}"
 
                 # Create the user
                 user = User.objects.create_user(
@@ -68,29 +77,54 @@ def login(request):
     }
     return render(request, 'login.html', context)
 
+
 @require_POST
 def logout_view(request):
     logout(request)
     return redirect('landing')
+
 @login_required(login_url='/login/')
 def student_dashboard(request):
-    profile = request.user.studentprofile  # Access the StudentProfile
-    registered_exams = profile.registered_exams()  # Get registered exams
-    empty_slots = 3 - profile.registered_exam_count  # Calculate empty slots
-    empty_slots_range = range(empty_slots)  # Create a range for the empty slots
+    profile = request.user.studentprofile
+    registered_exams = profile.registered_exams()
+    current_count = registered_exams.count()
+    empty_slots = 3 - current_count
+    if empty_slots < 0:
+        empty_slots = 0
+
+    # Get the search query from GET parameters
+    search_query = request.GET.get('search', '')
+
+    # Fetch logs for the current user
+    all_logs = StudentLog.objects.filter(user=request.user)
+
+    # If there's a search query, filter logs by action or details
+    if search_query:
+        all_logs = all_logs.filter(Q(details__icontains=search_query) | Q(action__icontains=search_query))
+    
+    # Limit to the first 10 logs after filtering
+    logs = all_logs.order_by('-timestamp')[:10]
 
     context = {
         'user': request.user,
         'registered_exams': registered_exams,
-        'empty_slots': empty_slots,  # Total empty slots
-        'empty_slots_range': empty_slots_range,  # Range for iterating empty slots
+        'empty_slots': empty_slots,
+        'empty_slots_range': range(empty_slots),
+        'logs': logs,
+        'search_query': search_query,
     }
 
     return render(request, 'student_dashboard.html', context)
 
+
+
 @login_required(login_url='/login/')
 def exam_registration_process(request):
-    exams = Exam.objects.all()
+    profile = request.user.studentprofile
+    # Get a list of exam IDs the user is already registered for
+    registered_exam_ids = profile.registered_exams().values_list('exam_id', flat=True)
+    # Exclude these exam IDs from the available exams
+    exams = Exam.objects.exclude(pk__in=registered_exam_ids)
     if request.method == "POST":
         # Retrieve form data
         exam_id = request.POST.get("exam_id")
@@ -118,12 +152,17 @@ def exam_registration_process(request):
                 location=location
             )
             registration.save()
-
-            # Increment the registered_exam_count
             profile.registered_exam_count += 1
             profile.save()
 
-            # Redirect to confirmation page with registration details
+            StudentLog.objects.create(
+                user=request.user,
+                action='REGISTER',
+                details=f"Exam: {exam.name}, Date: {selected_date}, Time: {selected_time}, Location: {location.full_address}"
+            )
+            
+
+            # Redirect to confirmation page
             return redirect(reverse('exam_registration_confirmation', kwargs={'registration_id': registration.id}))
         except Exception as e:
             return render(request, 'exam_registration_process.html', {
@@ -171,6 +210,12 @@ def cancel_registration(request, registration_id):
             if profile.registered_exam_count > 0:
                 profile.registered_exam_count -= 1
                 profile.save()
+                
+                StudentLog.objects.create(
+                user=request.user,
+                action='CANCEL',
+                details=f"Cancelled Exam: {registration.exam.name} originally scheduled on {registration.selected_date} at {registration.selected_time}"
+            )
             registration.delete()
         # Redirect to the dashboard regardless of the action
         return redirect('student_dashboard')
@@ -184,10 +229,15 @@ def reschedule_registration(request, registration_id):
     available_times = registration.exam.available_times  # Fetch available times from the exam
 
     if request.method == "POST":
-        if "confirm_reschedule" in request.POST:  # If user confirms the reschedule
+        if "confirm_reschedule" in request.POST:
             new_date = request.POST.get("new_date")
             new_time = request.POST.get("new_time")
 
+            # Capture old date/time before updating
+            old_date = registration.selected_date
+            old_time = registration.selected_time
+
+            # Check if the new time is available
             if new_time not in available_times:
                 messages.error(request, "Selected time is not available.")
                 return render(request, 'reschedule_registration.html', {
@@ -195,16 +245,26 @@ def reschedule_registration(request, registration_id):
                     'available_times': available_times,
                 })
 
+            # Update the registration with the new date and time
+            registration.selected_date = new_date
+            registration.selected_time = new_time
+
             try:
-                # Update the registration with the new date and time
-                registration.selected_date = new_date
-                registration.selected_time = new_time
                 registration.clean()  # Validate the updated registration
                 registration.save()
+
+                # Log the reschedule action
+                StudentLog.objects.create(
+                    user=request.user,
+                    action='RESCHEDULE',
+                    details=(f"Rescheduled Exam: {registration.exam.name} from {old_date} {old_time} "
+                             f"to {new_date} {new_time}")
+                )
+
                 return redirect(reverse('exam_registration_confirmation', kwargs={'registration_id': registration.id}))
             except ValidationError as e:
                 messages.error(request, str(e))
-        else:  # Redirect to the dashboard if the "Cancel" button is clicked
+        else:
             return redirect('student_dashboard')
 
     return render(request, 'reschedule_registration.html', {
@@ -213,6 +273,17 @@ def reschedule_registration(request, registration_id):
     })
 
 
+@login_required(login_url='/login/')
+def student_logs_view(request):
+    # Fetch all logs for the current user
+    all_logs = StudentLog.objects.filter(user=request.user)
+
+    # Setup pagination for 10 logs per page
+    paginator = Paginator(all_logs, 10)
+    page_number = request.GET.get('page')
+    logs_page = paginator.get_page(page_number)
+
+    return render(request, 'student_logs.html', {'logs': logs_page})
 def restricted_access(request):
     messages.warning(request, 'Session Expired. Please log in again.')
     return redirect('/login/?session_expired=true')
@@ -220,3 +291,75 @@ def restricted_access(request):
 def support_QA(request):
     return render(request, 'support_QA.html')
 
+from django.db.models import Q
+
+@login_required(login_url='/login/')
+def teacher_report_view(request):
+    if not request.user.has_perm('cordialapp.teacher_view'):
+        return render(request, 'no_access.html', status=403)
+
+    student_name = request.GET.get('student_name', '')
+    exam_name = request.GET.get('exam_name', '')
+    exam_date = request.GET.get('exam_date', '')
+    search_query = request.GET.get('search', '')
+
+    # Base queryset
+    qs = Registration.objects.select_related('exam', 'location', 'student__studentprofile', 'student')
+
+    if student_name:
+        qs = qs.filter(student__first_name__icontains=student_name) | qs.filter(student__last_name__icontains=student_name)
+    if exam_name:
+        qs = qs.filter(exam__name__icontains=exam_name)
+    if exam_date:
+        qs = qs.filter(selected_date=exam_date)
+    if search_query:
+        qs = qs.filter(Q(student__username__icontains=search_query) | 
+                       Q(exam__name__icontains=search_query) |
+                       Q(location__name__icontains=search_query))
+
+    # Now qs is filtered according to the parameters
+    registrations = qs.order_by('exam__name', 'selected_date')
+
+    return render(request, 'teacher_report.html', {
+        'registrations': registrations,
+        'student_name': student_name,
+        'exam_name': exam_name,
+        'exam_date': exam_date,
+        'search_query': search_query,
+    })
+
+
+@login_required(login_url='/login/')
+def student_history(request):
+    # Get the search query from GET parameters
+    search_query = request.GET.get('search', '')
+
+    # Fetch logs for the current user
+    all_logs = StudentLog.objects.filter(user=request.user)
+
+    # If there's a search query, filter logs by action or details
+    if search_query:
+        all_logs = all_logs.filter(Q(details__icontains=search_query) | Q(action__icontains=search_query))
+    
+    # Limit to the first 10 logs after filtering
+    logs = all_logs.order_by('-timestamp')[:10]
+
+    context = {
+        'logs': logs,
+        'search_query': search_query,
+    }
+
+    return render(request, 'student_history.html', context)
+
+
+@login_required(login_url='/login/')
+def student_info(request):
+    context = {
+        'username': request.user.username,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'email': request.user.email,
+        'password': 'NSHE ID is the password'  # Do not expose actual passwords
+    }
+
+    return render(request, 'student_info.html', context)

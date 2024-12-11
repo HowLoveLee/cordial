@@ -3,7 +3,9 @@
 {% block content %}
 
 <div class="registration-process" id="registrationProcess">
-    
+    {% if error_message %}
+  <p style="color:red;">{{ error_message }}</p>
+{% endif %}
     <h1>Exam Registration</h1>
     <a href="{% url 'student_dashboard' %}" class="button">Back</a>
 
@@ -65,18 +67,25 @@
             return `${hour12}:${minute.toString().padStart(2, "0")} ${period}`;
         }
 
-        // Populate the times dropdown with 12-hour display and maintain 24-hour backend value
-        function populateTimesDropdown(times24) {
+        // Populate the times dropdown with slot availability
+        function populateTimesDropdown(availableTimes) {
             const timeSelect = document.getElementById("timeSelect");
             timeSelect.innerHTML = '<option value="">-- Select a Time --</option>'; // Clear previous options
 
-            times24.forEach(time24 => {
+            for (const [time24, slots] of Object.entries(availableTimes)) {
                 const time12 = convertTo12HourFormat(time24);
                 const option = document.createElement("option");
                 option.value = time24; // Backend uses 24-hour format
-                option.textContent = time12; // Displayed as 12-hour format
+
+                if (slots <= 0) {
+                    option.textContent = `${time12} (Slots full)`;
+                    option.disabled = true;
+                } else {
+                    option.textContent = `${time12} (${slots} slots)`;
+                }
+
                 timeSelect.appendChild(option);
-            });
+            }
 
             // Log selected 24-hour time for backend processing
             timeSelect.addEventListener("change", function () {
@@ -153,17 +162,13 @@
                 fetch(`/get_locations/${examId}/`)
                 .then(response => response.json())
                 .then(data => {
-                    // Extract the keys (time slots) from the dictionary
-                    const timeKeys = Object.keys(data.available_times);
-            
-                    // Populate times dropdown using the keys
-                    populateTimesDropdown(timeKeys);
-            
+                    // Pass the entire dictionary of available times to the dropdown function
+                    populateTimesDropdown(data.available_times);
+
                     // Proceed to the date and time selection section
                     currentContainerIndex = 2;
                     showContainer(currentContainerIndex);
                 });
-            
             }
         });
 
@@ -180,6 +185,7 @@
         // Initial container setup
         showContainer(currentContainerIndex);
     });
+
     document.addEventListener("DOMContentLoaded", function () {
         const dateSelect = document.getElementById("dateSelect");
         const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format

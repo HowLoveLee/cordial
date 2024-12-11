@@ -7,6 +7,6 @@
 <form method="POST">
     {% csrf_token %}
     <button type="submit" name="confirm_cancel">Yes, Cancel Appointment</button>
-    <a href="{% url 'student_dashboard' %}" class="button">No, Skibidi back</a>
+    <a href="{% url 'student_dashboard' %}" class="button">No</a>
 </form>
 {% endblock %}

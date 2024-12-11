@@ -1,16 +1,20 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+import re
 
 class RegistrationForm(forms.ModelForm):
-    email = forms.EmailField(
+    nshe_id = forms.CharField(
         label='',
-        widget=forms.EmailInput(attrs={
+        widget=forms.TextInput(attrs={
             'type': 'text',
-            'id': 'r-email',
-            'name': 'r-email',
-            'placeholder': '1234567890@student.csn.edu',
+            'id': 'r-nshe-id',
+            'name': 'r-nshe-id',
+            'placeholder': '1234567890',
+            'maxlength': '10',
+            'minlength': '10',
+            'pattern': r'^\d{10}$',  # Ensures only numeric input
             'required': True,
-            'pattern': r'^[\w.-]+@student\.csn\.edu$',  # Ensures the email ends with @student.csn.edu
         })
     )
     first_name = forms.CharField(
@@ -31,25 +35,6 @@ class RegistrationForm(forms.ModelForm):
             'required': True,
         })
     )
-    nshe_id = forms.CharField(
-        label='',
-        widget=forms.TextInput(attrs={
-            'id': 'r-nshe-id',
-            'name': 'r-nshe-id',
-            'placeholder': 'NSHE-ID',
-            'required': True,
-        })
-    )
-    username = forms.CharField(
-        label='',
-        widget=forms.TextInput(attrs={
-            'id': 'r-username',
-            'name': 'r-username',
-            'placeholder': 'Username: Non-editable',
-            'readonly': True,
-            'required': True,
-        }),
-    )
     password = forms.CharField(
         label='',
         widget=forms.PasswordInput(attrs={
@@ -57,13 +42,18 @@ class RegistrationForm(forms.ModelForm):
             'name': 'r-password',
             'placeholder': 'Password',
             'required': True,
-
         }),
-   
     )
+
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'nshe_id', 'username', 'password')
+        fields = ('first_name', 'last_name', 'nshe_id', 'password')
+
+    def clean_nshe_id(self):
+        nshe_id = self.cleaned_data.get('nshe_id')
+        if not re.match(r'^\d{10}$', nshe_id):
+            raise ValidationError("NSHE ID must be exactly 10 digits.")
+        return nshe_id
 
 
 class LoginForm(forms.Form):

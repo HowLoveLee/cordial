@@ -132,7 +132,7 @@ nav li {
     text-decoration: none;
 }
 #bookbtn a:hover {
-    color: black;
+    color: rgba(0, 0, 0, 0.7);
 }
 .bookApp img {
     float: right;
@@ -153,11 +153,11 @@ nav li {
     width: 50%;
     border-bottom: 1px solid #ffd51d;
 }
-#campuses, .contact {
-    margin: 10px 0% 0px 10%;
+.contact {
+    margin: 10px 0% 2% 10%;
     width: 40%;
 }
-.campuses h1, .contact h1 {
+.contact h1 {
     color: #ffd51d;
     font-weight: 500;
     letter-spacing: 1.5px;
@@ -214,6 +214,92 @@ label {
     background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
 }
 
+/* footer */
+.footer {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+.footer p {
+    font-size: 14px;
+}
+.footer.content {
+    max-width: 100%;
+    background: #1f242d;
+    margin: auto;
+}
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+.footer ul {
+    list-style: none;
+}
+.footer {
+    background-color: #1f242d;
+}
+.footer-col {
+    width: 22%;
+    padding: 40px 15px;
+}
+.footer-col h4 {
+    font-size: 18px;
+    color: whitesmoke;
+    margin-bottom: 30px;
+    font-weight: 500;
+    position: relative;
+}
+.footer-col h4::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    background-color: #ffd51d;
+    height: 2px;
+    box-sizing: border-box;
+    width: 50px;
+}
+.footer-col ul li:not(:last-child) {
+    margin-bottom: 10px;
+}
+.footer-col ul li a {
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 300;
+    color: #bbbbbb;
+    list-style: none;
+    display: block;
+    transition: all 0.3s ease;
+}
+.footer-col ul li a:hover {
+    color: white;
+    padding-left: 8px;
+}
+.footer-col .socials, .footer-col img {
+    padding-left: 80px;
+}
+.footer-col .socials a {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: white;
+    transition: all 0.5s ease;
+}
+.footer-col .socials a:hover {
+    color: #24262b;
+    background-color: white;
+}
+.footer-col img {
+    margin-top: 12px;
+}
+
+
 
 @media only screen and (max-width: 600px) {
     #slogan {
@@ -232,7 +318,18 @@ label {
     .mainNav {
         display: none;
     }
-}
-html {
-    scroll-behavior: smooth;
+    .footer-col {
+        width: 50%;
+        padding: 10px 0px 10px 80px;
+    }
+    .footer {
+        line-height: 1;
+    }
+    .footer-col img, .footer-col .socials {
+        padding-left: 40%;
+        margin-bottom: 4%;
+    }
+    .footer-col img {
+        padding-top: 10%;
+    }
 }

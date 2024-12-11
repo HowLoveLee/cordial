@@ -16,4 +16,7 @@ urlpatterns = [
     path('QASupport/', views.support_QA, name='support_QA'),
     path('logout/', views.logout_view, name='logout'),
     path('admin/', admin.site.urls),
+    path('teacher_report/', views.teacher_report_view, name='teacher_report_view'),
+    path('student_history/', views.student_history, name='student_history'),
+    path('student_info/', views.student_info, name='student_info'),
 ]

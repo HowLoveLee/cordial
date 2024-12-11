@@ -36,56 +36,90 @@
             <a class="csn-link" href="{% url 'landing' %}"><img src="{% static 'images/logowhite.png' %}" alt="CSN LOGO"></a>
 
         </form>
+   <!-- Registration Form -->
+   <form method="POST" id="register-form" style="display: none;">
+    {% csrf_token %}
+    <h1 class="reg-title">Register</h1>
 
-    
-        <!-- Registration Form -->
-        <form method="POST" id="register-form" style="display: none;">
-            {% csrf_token %}
-            <h1 class="reg-title">Register</h1>
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li class="{{ message.tags }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% for field in register_form %}
-                <div class="register-input">
-                    {{ field }}
-                    {% if field.name == 'first_name' or field.name == 'last_name' %}
-                        <i class='bx bx-user'></i>
-                    {% elif field.name == 'email' %}
-                        <i class='bx bx-envelope'></i>
-                        
-                    {% elif field.name == 'password' %}
-                        <i class='bx bx-lock'></i>
-                    {% elif field.name == 'nshe_id' %}    
-                        <i class='bx bxs-id-card'></i>
-                    {% elif field.name == 'username' %}
-                        <i class='bx bx-id-card'></i>
-                    {% endif %}
-                </div>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
             {% endfor %}
-            <button type="submit" id="registerBtn" name="registerBtn">Create Account</button>
-            <p id="login" onclick="login()" class="reg-link">Already have an account? Login</p>
-                <a class="csn-link" href="{% url 'landing' %}"><img src="{% static 'images/logowhite.png' %}" alt="CSN LOGO"></a>
-        </form>
+        </ul>
+    {% endif %}
+
+    <!-- First Name -->
+    <div class="register-input">
+        <input type="text" id="r-first-name" name="first_name" placeholder="First Name" required>
+        <i class='bx bx-user'></i>
+    </div>
+
+    <!-- Last Name -->
+    <div class="register-input">
+        <input type="text" id="r-last-name" name="last_name" placeholder="Last Name" required>
+        <i class='bx bx-user'></i>
+    </div>
+
+    <!-- NSHE ID -->
+    <div class="register-input">
+        <input type="text" id="r-nshe-id" name="nshe_id" placeholder="NSHE ID (10 digits)" maxlength="10" minlength="10" pattern="^\d{10}$" required>
+        <i class='bx bxs-id-card'></i>
+        <p class="helper-text">For @student.csn.edu and password</p>
+    </div>
+
+    <!-- Username (Non-Editable) -->
+    <div class="register-input">
+        <input type="text" id="r-username" name="username" placeholder="Username" readonly>
+        <i class='bx bx-id-card'></i>
+    </div>
+
+    <!-- Password (Non-Editable) -->
+    <div class="register-input">
+        <input type="password" id="r-password" name="password" placeholder="Password" readonly>
+        <i class='bx bx-lock'></i>
+    </div>
+
+    <button type="submit" id="registerBtn" name="registerBtn">Create Account</button>
+    <p id="login" onclick="login()" class="reg-link">Already have an account? Login</p>
+    <a class="csn-link" href="{% url 'landing' %}">
+        <img src="{% static 'images/logowhite.png' %}" alt="CSN LOGO">
+    </a>
+</form>
+
+        
     </div>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const firstNameField = document.getElementById('r-first-name');
-    const nsheIdField = document.getElementById('r-nshe-id');
-    const usernameField = document.getElementById('r-username');
-
-    function updateUsername() {
-        const firstName = firstNameField.value.trim();
-        const nsheId = nsheIdField.value.trim();
-        usernameField.value = firstName + nsheId;
-    }
-
-    firstNameField.addEventListener('input', updateUsername);
-    nsheIdField.addEventListener('input', updateUsername);
-});
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstNameField = document.getElementById('r-first-name');
+        const nsheIdField = document.getElementById('r-nshe-id');
+        const usernameField = document.getElementById('r-username');
+        const passwordField = document.getElementById('r-password');
+    
+        function updateFields() {
+            const firstName = firstNameField.value.trim();
+            const nsheId = nsheIdField.value.trim();
+    
+            // Update the username field
+            if (firstName && nsheId.length === 10) {
+                const lastFour = nsheId.slice(-4); // Extract the last 4 digits
+                usernameField.value = `${firstName}${lastFour}`;
+            } else {
+                usernameField.value = ''; // Clear if incomplete
+            }
+    
+            // Update the password field
+            if (nsheId.length === 10) {
+                passwordField.value = nsheId;
+            } else {
+                passwordField.value = ''; // Clear if incomplete
+            }
+        }
+    
+        firstNameField.addEventListener('input', updateFields);
+        nsheIdField.addEventListener('input', updateFields);
+    });
+    
 </script>
 
 </body>

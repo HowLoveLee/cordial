@@ -1,86 +1,64 @@
-{% extends 'base.html' %}
+{% extends 'dashboard_base.html' %}
 {% load static %}
+
+{% block title %}Registration Confirmation{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
 {% block content %}
-    <header>
-        <a href="{%url 'landing' %}"><img src="{% static 'images/logo.png.webp'%}" width="320" height="90"></a>
-        <nav>
-            <a href="{% url 'landing' %}#contact-info" class="scroll">Contact</a>
-            <p>Hello, {{ user.first_name }}</p>
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Log Out</button>
-            </form>
-        </nav>
-    </header>
-<ul>
-    {#  Creates the blocks in the student dashbaord for each exam. Checking if the student has any opened slots.  #}
-    {% for registration in registered_exams %}
-        <li>
-            <div class="center-content">
-                <strong>{{ registration.exam.name }}</strong>
-            </div>
-            
-            <p>Date and Time: {{ registration.selected_date }}  at {{ registration.selected_time }}</p>
-            <p>Location: {{ registration.location.full_address }}</p>
-            <div class="center-content">
-                <button onclick="toggleExtraInfo(this)">Click for Description Details</button>
-                <p id="extra-info" style="display:none;">{{ registration.exam.description }}</p>
+<div class="content">
 
+    <div class="Slots">
+        <ul>
+            {#  Creates the blocks in the student dashbaord for each exam. Checking if the student has any opened slots.  #}
+            {% for registration in registered_exams %}
+                <li>
+                    <div class="center-content">
+                        <strong>{{ registration.exam.name }}</strong>
+                    </div>
+                    
+                    <p>Date and Time: {{ registration.selected_date }}  at {{ registration.selected_time }}</p>
+                    <p>Location: {{ registration.location.full_address }}</p>
+                    <div class="center-content">
+                        <button onclick="toggleExtraInfo(this)">Click for Description Details</button>
+                        <p id="extra-info" style="display:none;">{{ registration.exam.description }}</p>
+        
+        
+                    </div>
+              
+                    
+                    <div class="actions " >
+                        <a class="blue" href="{% url 'reschedule_registration' registration.id %}">Reschedule</a>
+                        <a class="red" href="{% url 'cancel_registration' registration.id %}">Cancel</a>
+                    </div>
+                </li>
+                
+                <div id="printContent-{{ registration.id }}" style="display: none;">
+                    <h2>Exam Details</h2>
+                    <p><strong>Exam:</strong> {{ registration.exam.name }}</p>
+                    <p><strong>Date:</strong> {{ registration.selected_date }}</p>
+                    <p><strong>Time:</strong> {{ registration.selected_time }}</p>
+                    <p><strong>Location:</strong> {{ registration.location.full_address }}</p>
+                    <p><strong>Description:</strong> {{ registration.exam.description }}</p>
+                </div>
+                
+            {% endfor %}
+            {% for i in empty_slots_range %}
+                <li><a href="{% url 'exam_registration_process' %}">Empty Slot</a></li>
+            {% endfor %}
+        </ul>
 
-            </div>
-      
-            
-            <div class="actions " >
-                <a class="blue" href="{% url 'reschedule_registration' registration.id %}">Reschedule</a>
-                <a class="red" href="{% url 'cancel_registration' registration.id %}">Cancel</a>
-                <a class="print" href="#" onclick="printExamDetails({{ registration.id }})">Print</a>                
-            </div>
-        </li>
-        
-        <div id="printContent-{{ registration.id }}" style="display: none;">
-            <h2>Exam Details</h2>
-            <p><strong>Exam:</strong> {{ registration.exam.name }}</p>
-            <p><strong>Date:</strong> {{ registration.selected_date }}</p>
-            <p><strong>Time:</strong> {{ registration.selected_time }}</p>
-            <p><strong>Location:</strong> {{ registration.location.full_address }}</p>
-            <p><strong>Description:</strong> {{ registration.exam.description }}</p>
-        </div>
-        
-    {% endfor %}
-    {% for i in empty_slots_range %}
-        <li><a href="{% url 'exam_registration_process' %}">Empty Slot</a></li>
-    {% endfor %}
-</ul>
+    </div>
+    
+    
+    
+    
+</div>
+
 
 <script>
-    function printExamDetails(registrationId) {
-        const printContent = document.getElementById(`printContent-${registrationId}`).innerHTML;
 
-        const printWindow = window.open('', '_blank');
-        printWindow.document.open();
-        printWindow.document.write(`
-            <html>
-            <head>
-                <title>Print Exam Details</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: 20px;
-                        padding: 0;
-                    }
-                    h2 {
-                        text-align: center;
-                    }
-                </style>
-            </head>
-            <body onload="window.print(); window.close();">
-                ${printContent}
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
-    }
-        // Function to toggle the visibility of the extra-info paragraph
     function toggleExtraInfo(button) {
         // Find the next sibling of the button, which is the extra-info paragraph
         const extraInfo = button.nextElementSibling;
@@ -93,4 +71,5 @@
         }
     }
 </script>
+
 {% endblock %}
