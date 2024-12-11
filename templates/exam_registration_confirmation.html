@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+<!---% extends 'base.html' %}
 {% load static %}
 
 {% block extra_css %}
@@ -8,7 +8,7 @@
 <h1>Registration Confirmation</h1>
 
 <p><strong>Exam:</strong> {{ registration.exam.name }}</p>
-<p><strong>Description:</strong> {{ registration.exam.description }}</p>
+<p><strong>Description:</strong> {{ Sregistration.exam.description }}</p>
 <p><strong>Date:</strong> {{ registration.selected_date }}</p>
 <p><strong>Time:</strong> {{ registration.selected_time }}</p>
 <p><strong>Location:</strong> {{ registration.location }}</p>
@@ -20,4 +20,90 @@
     <li><a href="{% url 'cancel_registration' registration.id %}">Cancel Registration</a></li>
     <li><a href="{% url 'reschedule_registration' registration.id %}">Reschedule</a></li>
 </ul>
-{% endblock %}
+{% endblock %}-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset = "UTF-8" />
+        <title>Registration Confirmation Page</title>
+        
+        <link rel="stylesheet" href="/static/css/confirmation.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Radio+Canada:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+            integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" 
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function(){
+                $('.confirm').click(function(){
+                    $('.confirm_popup').css({
+                    "opacity": "1", "pointer-events" : "auto"
+                    });
+                });
+                $('.nobtn').click(function(){
+                    $('.confirm_popup').css({
+                    "opacity": "0", "pointer-events":"none"
+                    });
+                });
+            });
+        
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="#" class="logo">
+                        <img src="/static/images/csnlogo.png">
+                        <span class="nav-item">Student</span>
+                    </a></li>
+                    <li><a href="#">
+                        <i class="fa-solid fa-house"></i>
+                        <span class="nav-item">Home</span> 
+                    </a></li>
+                    <li><a href="#">
+                        <i class="fa-solid fa-user"></i>
+                        <span class="nav-item">Dashboard</span> 
+                    </a></li>
+                    <li><a href="#">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span class="nav-item">Schedule Exam</span> 
+                    </a></li>
+                    <li><a href="#">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span class="nav-item">Cancel Exam</span> 
+                    </a></li>
+                    <li><a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        <span class="nav-item">Settings</span> 
+                    </a></li>
+                    <li><a href="#" class="logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span class="nav-item">Logout</span> 
+                    </a></li>
+                </ul>
+            </nav>
+
+            <section class ="registration-confirm">
+                <div class = "reg-confirm">
+                <h1>Exam Registration - Confirmation</h1>
+                </div>
+            </section>
+
+            <a href="#" class="confirm">Confirm</a>
+            <div class="confirm_popup">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <h2>Does everything look correct?</h2>
+                <label>Please confirm all information is correct before proceeding.</label>
+                <div class="buttons">
+                    <a href="#" class="nobtn">Go Back</a>
+                    <a href="#" class="yesbtn">Confirm</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

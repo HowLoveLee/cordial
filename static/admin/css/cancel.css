@@ -138,111 +138,73 @@ a:hover i{
     display: flex;
 }
 
-/*Main Section*/
+/* scheduled list section*/
 
-.registration-confirm{
+.schedule{
     position: relative;
-    padding: 20px;
     width: 100%;
-}
-
-.reg-confirm{
-    display: flex;
-    width: 100%;
-}
-.reg-confirm i{
-    position: absolute;
-    right: 0;
-    margin: 10px 30px;
-    color: rgb(110, 109, 109);
-    cursor: pointer;
-}
-
-
-/*confirmation pop-up*/
-
-.confirm, .confirm_popup{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-}
-
-.confirm{
-    background: #071a6d;
-    color: white;
-    font-family: "Radio Canada",sans-serif;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px 15px;
-    border: 1px solid #0059b3;
-}
-
-.confirm:hover{
-    transition: .5s;
-    background: #3e95ec;
-
-}
-
-.confirm_popup{
-    user-select: none;
-    width: 400px;
-    background: #f2f2f2;
-    text-align: center;
-    align-items: center;
-    padding: 40px;
-    border: 1px solid #b3b3b3;
-    box-shadow: 0px 5px 10px rgba(0,0,0 .2);
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: all .3s ease-in-out;
-}
-
-.confirm_popup i{
-    font-size: 60px;
-    color: #e7b425;
-    border-radius: 50%;
-    margin: -10px 0 20px 0;
-}
-
-.confirm_popup h2{
-    font-size: 30px;
-    color: #0e0b22;
-    margin-bottom: 5px;
-}
-
-.confirm_popup label{
-    font-size: 20px;
-    color: #5e5c5c;
-}
-
-.confirm_popup .buttons{
-    display: flex;
-    flex-direction: row;
-    margin: 20px 0 0 0;
-}
-
-.buttons .yesbtn, .buttons .nobtn{
-    background: #071a6d;
-    color: white;
-    font-size: 18px;
-    padding: 10px 13px;
-    border: 1px solid #808080;
-    border-radius: 5px;
-}
-
-.buttons .nobtn{
-    background: #8f8f8f;
+    margin-left: 20px;
     margin-right: 20px;
-    border:1px solid #5f5f5f;
+    text-transform: capitalize;
+    
 }
 
-.yesbtn:hover{
-    transition: .5s;
-    background: #3e95ec;
+.exam-list{
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
 }
 
+.table{
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 15px;
+    min-width: 100%;
+    overflow: hidden;
+    border-radius: 5px 5px 0 0;
+}
 
+table thead tr{
+    color: #fff;
+    background: #191964;
+    text-align: left;
+    font-weight: bold;
+}
 
+.table th, .table td{
+    padding: 12px 15px;
+}
+
+.table tbody tr{
+    border-bottom: 1px solid #e7b425;
+}
+
+.table tbody tr:nth-of-type(even){
+    background: #f3f3f3;
+}
+
+.table tbody tr.active{
+    font-weight: bold;
+    color: #191964;
+}
+
+.table tbody tr:last-of-type{
+    border-bottom: 2px solid #191964;
+}
+
+.table button{
+    padding: 6px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid #191964;
+}
+
+.table button:hover{
+    background: #dab54f;
+    color: #191964;
+    transition: 0.5s;
+}

@@ -12,7 +12,8 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.db.models import Q
-
+from django.core.mail import send_mail
+from django.conf import settings
 def landing(request):
     return  render(request, 'landing.html')
 
@@ -27,7 +28,6 @@ def login(request):
                 nshe_id = register_form.cleaned_data.get('nshe_id')
                 password = nshe_id  # Password is set to the full NSHE ID
 
-                # Combine NSHE ID with the domain to create email
                 email = f"{nshe_id}@student.csn.edu"
 
                 # Check if the email already exists
@@ -35,10 +35,8 @@ def login(request):
                     messages.error(request, 'This email is already registered. Please use a different email.')
                     return render(request, 'login.html', {'register_form': register_form, 'login_form': login_form})
 
-                # Extract the last 4 digits of the NSHE ID
                 last_four_nshe = nshe_id[-4:]
 
-                # Generate a username with First Name + last 4 of NSHE ID
                 username = f"{first_name}{last_four_nshe}"
 
                 # Create the user
@@ -48,6 +46,20 @@ def login(request):
                     first_name=first_name,
                     last_name=last_name,
                     password=password
+                )
+
+                # Send a welcome email
+                send_mail(
+                    subject="Welcome to the Exam Registration System",
+                    message=(
+                        f"Hi {first_name},\n\n"
+                        f"Welcome to the Exam Registration System! Your account has been successfully created!\n\n"
+                        f"Username: {username}\n"
+                        f"Best regards,\nExam Registration Team"
+                    ),
+                    from_email="hostemail@gmail.com",
+                    recipient_list=[email],
+                    fail_silently=False,
                 )
 
                 auth_login(request, user)
@@ -117,7 +129,6 @@ def student_dashboard(request):
     return render(request, 'student_dashboard.html', context)
 
 
-
 @login_required(login_url='/login/')
 def exam_registration_process(request):
     profile = request.user.studentprofile
@@ -155,14 +166,31 @@ def exam_registration_process(request):
             profile.registered_exam_count += 1
             profile.save()
 
+            # Log the registration action
             StudentLog.objects.create(
                 user=request.user,
                 action='REGISTER',
                 details=f"Exam: {exam.name}, Date: {selected_date}, Time: {selected_time}, Location: {location.full_address}"
             )
-            
 
-            # Redirect to confirmation page
+            # Send confirmation email
+            send_mail(
+                subject="Exam Registration Confirmation",
+                message=(
+                    f"Hi {request.user.first_name}, \n\n"
+                    f"You have successfully registered for the exam: \n\n"
+                    f"Exam: {exam.name}\n"
+                    f"Date: {selected_date} \n"
+                    f"Time: {selected_time} \n"
+                    f"Location: {location.name}\n\n"
+                    f"Best Regards,\nCSN Exam Registration Team - CA"
+                ),
+                from_email="hostemail@gmail.com",
+                recipient_list=[request.user.email],
+                fail_silently=False,
+            )
+
+            # Redirect to confirmation page with registration details
             return redirect(reverse('exam_registration_confirmation', kwargs={'registration_id': registration.id}))
         except Exception as e:
             return render(request, 'exam_registration_process.html', {
@@ -171,6 +199,8 @@ def exam_registration_process(request):
             })
 
     return render(request, 'exam_registration_process.html', {'exams': exams})
+
+
 
 @login_required(login_url='/login/')
 def get_locations_and_times(request, exam_id):

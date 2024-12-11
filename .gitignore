@@ -9,3 +9,4 @@ db.sqlite3
 /staticfiles/
 #Cordial123Users
 env
+templates/boop.code-workspace
