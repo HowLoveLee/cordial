@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,10 +38,22 @@
                     <img src="{% static 'images/csnlogo.png' %}" alt="Logo">
                     <span class="nav-item">Hello {{ user.first_name }}!</span>
                 </a></li>
-                <li><a href="{% url 'student_dashboard'%}">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="nav-item">Dashboard</span> 
-                </a></li>
+                <li>
+                    {% if perms.cordialapp.teacher_view %}
+                        <a href="{% url 'teacher_report_view' %}">
+                            <i class="fa-solid fa-user-tie"></i>
+                            <span class="nav-item">Teacher Report</span> 
+                        </a>
+                    {% else %}
+                        <a href="{% url 'student_dashboard' %}">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="nav-item">Dashboard</span> 
+                        </a>
+                    {% endif %}
+                </li>
+                
+                
+            
                 <li><a href="{%url 'student_history'%}">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span class="nav-item">Action History</span> 

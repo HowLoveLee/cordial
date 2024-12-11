@@ -1,5 +1,7 @@
 {% extends 'dashboard_base.html' %}
 {% block content %}
+<div class="content">
+
 <h1>Registrations Report</h1>
 <form method="GET" action="">
     <input type="text" name="student_name" placeholder="Student Name" value="{{ student_name }}">
@@ -33,4 +35,5 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}

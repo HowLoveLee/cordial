@@ -146,16 +146,12 @@ a:hover i{
     width: 100%;
 }
 
-.reg-confirm{
+.reg-confirm {
     display: flex;
+    flex-direction: column; /* Ensures items stack vertically */
+    align-items: flex-start; /* Aligns items to the start of the container */
+    gap: 10px; /* Adds spacing between each item */
     width: 100%;
-}
-.reg-confirm i{
-    position: absolute;
-    right: 0;
-    margin: 10px 30px;
-    color: rgb(110, 109, 109);
-    cursor: pointer;
 }
 
 

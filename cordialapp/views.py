@@ -226,10 +226,15 @@ def exam_registration_confirmation(request, registration_id):
     registration = get_object_or_404(Registration, id=registration_id, student=request.user)
     registration_date_localized = timezone.localtime(registration.registration_date)
 
-    return render(request, 'exam_registration_confirmation.html', {
+    context = {
         'registration': registration,
         'registration_date_localized': registration_date_localized,
-    })
+        'reschedule_url': reverse('reschedule_registration', kwargs={'registration_id': registration_id}),
+        'cancel_url': reverse('cancel_registration', kwargs={'registration_id': registration_id}),
+        'confirm_url': reverse('student_dashboard'),
+    }
+
+    return render(request, 'exam_registration_confirmation.html', context)
 
 @login_required(login_url='/login/')
 def cancel_registration(request, registration_id):
@@ -240,20 +245,37 @@ def cancel_registration(request, registration_id):
             if profile.registered_exam_count > 0:
                 profile.registered_exam_count -= 1
                 profile.save()
-                
+
                 StudentLog.objects.create(
-                user=request.user,
-                action='CANCEL',
-                details=f"Cancelled Exam: {registration.exam.name} originally scheduled on {registration.selected_date} at {registration.selected_time}"
-            )
-            registration.delete()
+                    user=request.user,
+                    action='CANCEL',
+                    details=f"Cancelled Exam: {registration.exam.name} originally scheduled on {registration.selected_date} at {registration.selected_time}"
+                )
+
+                # Send cancellation email
+                send_mail(
+                    subject="Exam Cancellation Confirmation",
+                    message=(
+                        f"Hi {request.user.first_name}, \n\n"
+                        f"You have successfully cancelled your exam: \n\n"
+                        f"Exam: {registration.exam.name}\n"
+                        f"Originally scheduled for: {registration.selected_date} at {registration.selected_time}\n\n"
+                        f"Best Regards,\nCSN Exam Registration Team - CA"
+                    ),
+                    from_email="hostemail@gmail.com",
+                    recipient_list=[request.user.email],
+                    fail_silently=False,
+                )
+
+                registration.delete()
         # Redirect to the dashboard regardless of the action
         return redirect('student_dashboard')
 
     return render(request, 'cancel_registration.html', {'registration': registration})
 
 
-@login_required(login_url='/login/')
+
+login_required(login_url='/login/')
 def reschedule_registration(request, registration_id):
     registration = get_object_or_404(Registration, id=registration_id, student=request.user)
     available_times = registration.exam.available_times  # Fetch available times from the exam
@@ -291,6 +313,22 @@ def reschedule_registration(request, registration_id):
                              f"to {new_date} {new_time}")
                 )
 
+                # Send reschedule confirmation email
+                send_mail(
+                    subject="Exam Reschedule Confirmation",
+                    message=(
+                        f"Hi {request.user.first_name}, \n\n"
+                        f"You have successfully rescheduled your exam: \n\n"
+                        f"Exam: {registration.exam.name}\n"
+                        f"New schedule: {new_date} at {new_time}\n"
+                        f"Previous schedule: {old_date} at {old_time}\n\n"
+                        f"Best,\nCordial Associtates - CA"
+                    ),
+                    from_email="hostemail@gmail.com",
+                    recipient_list=[request.user.email],
+                    fail_silently=False,
+                )
+
                 return redirect(reverse('exam_registration_confirmation', kwargs={'registration_id': registration.id}))
             except ValidationError as e:
                 messages.error(request, str(e))
@@ -301,6 +339,7 @@ def reschedule_registration(request, registration_id):
         'registration': registration,
         'available_times': available_times,
     })
+
 
 
 @login_required(login_url='/login/')
