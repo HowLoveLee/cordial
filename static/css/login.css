@@ -117,3 +117,8 @@ display: flex;
        padding: 20px 60px 0 60px !important;
 }
 
+.messages li, .messages ul, .error ul, .error li{
+    list-style: none;
+    justify-content: center;
+    text-align: center;
+}

@@ -151,15 +151,19 @@
                 // Fetch available times for the selected location and exam
                 const examId = document.querySelector("input[name='exam_id']").value;
                 fetch(`/get_locations/${examId}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Populate times dropdown with 12-hour format times
-                        populateTimesDropdown(data.available_times);
-
-                        // Proceed to the date and time selection section
-                        currentContainerIndex = 2;
-                        showContainer(currentContainerIndex);
-                    });
+                .then(response => response.json())
+                .then(data => {
+                    // Extract the keys (time slots) from the dictionary
+                    const timeKeys = Object.keys(data.available_times);
+            
+                    // Populate times dropdown using the keys
+                    populateTimesDropdown(timeKeys);
+            
+                    // Proceed to the date and time selection section
+                    currentContainerIndex = 2;
+                    showContainer(currentContainerIndex);
+                });
+            
             }
         });
 

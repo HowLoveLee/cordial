@@ -22,17 +22,27 @@ class Location(models.Model):
         return f"Room: {self.room_number}, {self.building} Building, {self.full_address}"
 
 
+def default_available_times():
+    return {
+        "07:00": 20, "07:30": 20, "08:00": 20, "08:30": 20,
+        "09:00": 20, "09:30": 20, "10:00": 20, "10:30": 20,
+        "11:00": 20, "11:30": 20, "12:00": 20, "12:30": 20,
+        "13:00": 20, "13:30": 20, "14:00": 20, "14:30": 20,
+        "15:00": 20, "15:30": 20, "16:00": 20, "16:30": 20,
+        "17:00": 20
+    }
+
 class Exam(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(default='No description provided.')
     duration = models.IntegerField(default=60)  # Duration in minutes
     date = models.DateField(default=datetime.date.today)
-    available_times = models.JSONField(default=list)  # Stores available time slots (e.g., ["08:00", "10:00"])
     locations = models.ManyToManyField(Location)
+    available_times = models.JSONField(default=default_available_times)
 
     def available_slots(self, location, time):
         registrations = Registration.objects.filter(exam=self, location=location, selected_time=time)
-        return max(20 - registrations.count(), 0)  # Assuming 20 slots per hour
+        return max(self.available_times.get(time, 0) - registrations.count(), 0)
 
     def __str__(self):
         return self.name
@@ -50,9 +60,15 @@ class Registration(models.Model):
         unique_together = ['student', 'selected_date', 'selected_time']
 
     def clean(self):
-        # Ensure the selected slot has availability
         if self.exam.available_slots(self.location, self.selected_time) <= 0:
             raise ValidationError(f"No slots available for {self.exam.name} at this time and location.")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        str_time = self.selected_time.strftime("%H:%M")
+        if str_time in self.exam.available_times and self.exam.available_times[str_time] > 0:
+            self.exam.available_times[str_time] -= 1
+            self.exam.save()
 
     def __str__(self):
         return f"{self.student.username} - {self.exam.name} on {self.selected_date} at {self.selected_time}"
