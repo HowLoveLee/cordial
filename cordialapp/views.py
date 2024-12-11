@@ -10,7 +10,8 @@ from .models import Exam, Registration, Location
 from django.urls import reverse
 from django.http import JsonResponse
 from django.utils import timezone
-
+from django.core.mail import send_mail
+from django.conf import settings
 def landing(request):
     return  render(request, 'landing.html')
 
@@ -32,6 +33,8 @@ def login(request):
 
                 username = f"{first_name}{nshe_id}"
 
+                from django.core.mail import send_mail
+
                 # Create the user
                 user = User.objects.create_user(
                     username=username,
@@ -39,6 +42,14 @@ def login(request):
                     first_name=first_name,
                     last_name=last_name,
                     password=password
+                )
+
+                send_mail(
+                subject="Welcome to the Exam Registration System",
+                message= f"Hi {first_name},\n\nWelcome to the Exam Registration System! Your account has been successfully created!\n\nWelcome Username: {username}\n\nBest regards,\nExam Registration Team",
+                from_email = "hostemail@gmail.com",
+                recipient_list=[email],
+                fail_silently=False,
                 )
 
                 auth_login(request, user)
@@ -122,6 +133,23 @@ def exam_registration_process(request):
             # Increment the registered_exam_count
             profile.registered_exam_count += 1
             profile.save()
+
+            # Send confirmation email
+            send_mail(
+                subject="Exam Registration Confirmation",
+                message=(
+                    f"Hi {request.user.first_name}, \n\n"
+                    f"You have successfully registered for the exam: \n\n"
+                    f"Exam: {exam.name}\n"
+                    f"Date: {selected_date} \n"
+                    f"Time: {selected_time} \n"
+                    f"Location: {location.name}\n\n"
+                    f"Best Regards,\nCSN Exam Registration Team - CA"
+                ),
+                from_email="hostemail@gmail.com",
+                recipient_list=[request.user.email],
+                fail_silently=False,
+            )
 
             # Redirect to confirmation page with registration details
             return redirect(reverse('exam_registration_confirmation', kwargs={'registration_id': registration.id}))
