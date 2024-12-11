@@ -20,7 +20,8 @@
     <link rel="stylesheet" href="{% static 'css/in.css' %}">
 
     
-    {% elif request.path == '/exam_registration/' %}
+    {% elif request.path == '/exam_registration/' or request.path|slice:":26" == '/exam_registration_confirmation' %}
+
     <link rel="stylesheet" href="{% static 'css/process.css'%}">
     {% elif request.path == '/QASupport/' %}
     <link rel="stylesheet" href="{% static 'css/faq.css' %}">
@@ -45,6 +46,7 @@
 
 {# Calender #}
 <link rel="stylesheet" href="{% static 'javascript/dist/assets/calendar-CTDkUHhy.css' %}">
+{% block extra_css %}{% endblock %}
 
 
 </head>
