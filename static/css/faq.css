@@ -13,7 +13,6 @@ body {
     min-height: 100vh;
 }
 .wrapper {
-    background-image: url("static/images/csn.jpg");
     background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url('images/coyote.jpeg');
     background-size: cover;
     background-position: fixed;
@@ -133,16 +132,17 @@ nav li {
 #questions label + input[type="radio"]:checked + .content {
     max-height: 800px;
 }
+
 #faqTitle {
     font-size: 63px;
     font-weight: 600;
-    background-image: url('static/images/yellow2.jpg');
     background-size: 250px;
     -webkit-text-stroke: 0.5px black;
     background-repeat: repeat;
-    color: transparent;
+    color: yellow;
     -webkit-background-clip: text;
     background-clip: text;
+
   }
 #title {
     color: #01478E;

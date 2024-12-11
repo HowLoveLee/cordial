@@ -11,10 +11,32 @@
     {#  Internal CSS#}
     {% if request.path == '/' %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .wrapper {
+            background-image: url("static/images/csn.jpg");
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url('static/images/coyote.jpeg');
+    </style>
+    {% elif request.path == '/student_dashboard/' %}
+    <link rel="stylesheet" href="{% static 'css/in.css' %}">
+
+    
+    {% elif request.path == '/exam_registration/' or request.path|slice:":26" == '/exam_registration_confirmation' %}
+
+    <link rel="stylesheet" href="{% static 'css/process.css'%}">
     {% elif request.path == '/QASupport/' %}
     <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+    <style>
+        #faqTitle {
+            background-image: url('{%static 'images/yellow2.jpg' %}');
+            }
+            .wrapper{
+                background-image: url('{%static 'images/yellow2.jpg' %}');
+            }
+            
+    </style>
     {% endif %}
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
     {# External CSS #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://use.fontawesome.com/releases/v6.5.1/js/all.js" defer="" crossorigin="anonymous" data-search-pseudo-elements=""></script>
@@ -24,22 +46,19 @@
 
 {# Calender #}
 <link rel="stylesheet" href="{% static 'javascript/dist/assets/calendar-CTDkUHhy.css' %}">
+{% block extra_css %}{% endblock %}
 
-<style>
-    .wrapper {
-        background-image: url("static/images/csn.jpg");
-        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url('static/images/coyote.jpeg');
-</style>
+
 </head>
 <body>
         {% block content %}
         {% endblock %}
 <script type="module" src="{% static 'javascript/dist/assets/calendar-BFOXfLTj.js' %}"></script>
-
+<script src="{%static 'javascript/script.js'%}"  script></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
 
 {% comment %} 
-Alex123123123123123
-123123123123123
+
 {% endcomment %}

@@ -1,87 +1,186 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="registration-process" id="registrationProcess">
+    
     <h1>Exam Registration</h1>
-    <a href="{% url 'student_dashboard' %}" class="button">No, Go Back</a>
+    <a href="{% url 'student_dashboard' %}" class="button">Back</a>
 
     <form method="POST" id="registrationForm">
         {% csrf_token %}
-        
-        <!-- Select an Exam -->
-        <label for="exam_id">Select Exam:</label>
-        <select name="exam_id" id="examSelect" required>
-            <option value="">-- Select an Exam --</option>
+        <div class="container exam-select" id="container1">
+            <h2>Available Exams</h2>
             {% for exam in exams %}
-            <option value="{{ exam.id }}">{{ exam.name }}</option>
+            <div class="exam-item" id="exam_{{ exam.id }}">
+                <div class="selection">
+                    <p><strong>{{ exam.name }}</strong></p>
+                    <button type="button" class="details-btn" data-exam-id="{{ exam.id }}">Details</button>
+                </div>
+                <div class="exam-details" id="details_{{ exam.id }}" style="display: none;">
+                    <p>{{ exam.description }}</p>
+                    <p>Duration: {{ exam.duration }} minutes</p>
+                    <button type="button" class="select-exam-btn" data-exam-id="{{ exam.id }}">Select Exam</button>
+                </div>
+            </div>
             {% endfor %}
-        </select>
+        </div>
 
-        <!-- Select a Location -->
-        <label for="location_id">Select Location:</label>
-        <select name="location_id" id="locationSelect" required>
-            <option value="">-- Select a Location --</option>
-        </select>
+        <div class="container location-select" id="container2" style="display: none;">
+            <h2>Select a Location</h2>
+            <div id="locationOptions"></div>
+            <button type="button" class="back-btn">Back</button>
+        </div>
 
-        <!-- Select Date -->
-        <label for="selected_date">Select Date:</label>
-        <input type="date" name="selected_date" id="dateSelect" required>
-
-        <!-- Select Time -->
-        <label for="selected_time">Select Time:</label>
-        <select name="selected_time" id="timeSelect" required>
-            <option value="">-- Select a Time --</option>
-        </select>
-
-        <button type="submit">Register</button>
+        <div class="container date-select" id="container3" style="display: none;">
+            <h2>Select Date and Time</h2>
+            <label for="selected_date">Select Date:</label>
+            <input type="date" name="selected_date" id="dateSelect" required>
+            <label for="selected_time">Available Times:</label>
+            <select name="selected_time" id="timeSelect" required>
+                <option value="">-- Select a Time --</option>
+            </select>
+            <button type="button" class="back-btn">Back</button>
+            <button type="submit">Register</button>
+        </div>
     </form>
 </div>
 
-<div class="confirmation" id="confirmation" style="display: none;">
-    <h1>Registration Confirmation</h1>
-    <p><strong>Exam:</strong> <span id="confirmExam"></span></p>
-    <p><strong>Location:</strong> <span id="confirmLocation"></span></p>
-    <p><strong>Date:</strong> <span id="confirmDate"></span></p>
-    <p><strong>Time:</strong> <span id="confirmTime"></span></p>
-    <button onclick="goToDashboard()">Back to Dashboard</button>
-</div>
-
 <script>
-    document.getElementById("examSelect").addEventListener("change", function () {
-        const examId = this.value;
-    
-        if (!examId) {
-            // Clear locations and times if no exam is selected
-            document.getElementById("locationSelect").innerHTML = '<option value="">-- Select a Location --</option>';
-            document.getElementById("timeSelect").innerHTML = '<option value="">-- Select a Time --</option>';
-            return;
-        }
-    
-        // Fetch locations and times dynamically
-        fetch(`/get_locations/${examId}/`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const locationSelect = document.getElementById("locationSelect");
-                locationSelect.innerHTML = '<option value="">-- Select a Location --</option>';
-                data.locations.forEach(location => {
-                    locationSelect.innerHTML += `<option value="${location.id}">${location.name}</option>`;
-                });
-    
-                const timeSelect = document.getElementById("timeSelect");
-                timeSelect.innerHTML = '<option value="">-- Select a Time --</option>';
-                data.available_times.forEach(time => {
-                    timeSelect.innerHTML += `<option value="${time}">${time}</option>`;
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching locations and times:', error);
+    document.addEventListener("DOMContentLoaded", function () {
+        const containers = document.querySelectorAll(".container");
+        let currentContainerIndex = 0;
+
+        function showContainer(index) {
+            containers.forEach((container, i) => {
+                container.style.display = i === index ? "block" : "none";
             });
+        }
+
+        // Converts 24-hour time to 12-hour time
+        function convertTo12HourFormat(time24) {
+            const [hour, minute] = time24.split(":").map(Number);
+            const period = hour >= 12 ? "PM" : "AM";
+            const hour12 = hour % 12 || 12; // Convert hour '0' to '12' for 12-hour format
+            return `${hour12}:${minute.toString().padStart(2, "0")} ${period}`;
+        }
+
+        // Populate the times dropdown with 12-hour display and maintain 24-hour backend value
+        function populateTimesDropdown(times24) {
+            const timeSelect = document.getElementById("timeSelect");
+            timeSelect.innerHTML = '<option value="">-- Select a Time --</option>'; // Clear previous options
+
+            times24.forEach(time24 => {
+                const time12 = convertTo12HourFormat(time24);
+                const option = document.createElement("option");
+                option.value = time24; // Backend uses 24-hour format
+                option.textContent = time12; // Displayed as 12-hour format
+                timeSelect.appendChild(option);
+            });
+
+            // Log selected 24-hour time for backend processing
+            timeSelect.addEventListener("change", function () {
+                const selectedTime = this.value; // This is in 24-hour format
+                console.log("Selected 24-hour time:", selectedTime); // Debug or send to backend
+            });
+        }
+
+        // Toggle details view for exams
+        document.querySelectorAll(".details-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const examId = this.dataset.examId;
+                const detailsDiv = document.getElementById(`details_${examId}`);
+                detailsDiv.style.display = detailsDiv.style.display === "none" ? "block" : "none";
+            });
+        });
+
+        // Select an exam
+        document.querySelectorAll(".select-exam-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const examId = this.dataset.examId;
+                const form = document.getElementById("registrationForm");
+
+                // Store exam ID as a hidden input
+                let examInput = document.querySelector("input[name='exam_id']");
+                if (!examInput) {
+                    examInput = document.createElement("input");
+                    examInput.type = "hidden";
+                    examInput.name = "exam_id";
+                    form.appendChild(examInput);
+                }
+                examInput.value = examId;
+
+                // Fetch locations for the selected exam
+                fetch(`/get_locations/${examId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const locationOptions = document.getElementById("locationOptions");
+                        locationOptions.innerHTML = ""; // Clear previous options
+                        data.locations.forEach(location => {
+                            const locationDiv = document.createElement("div");
+                            locationDiv.classList.add("location-item");
+                            locationDiv.innerHTML = `
+                                <p><strong>${location.name}</strong></p>
+                                <button type="button" class="select-location-btn" data-location-id="${location.id}">Select Location</button>
+                            `;
+                            locationOptions.appendChild(locationDiv);
+                        });
+
+                        // Proceed to the location selection section
+                        currentContainerIndex = 1;
+                        showContainer(currentContainerIndex);
+                    });
+            });
+        });
+
+        // Select a location
+        document.getElementById("locationOptions").addEventListener("click", function (e) {
+            if (e.target.classList.contains("select-location-btn")) {
+                const locationId = e.target.dataset.locationId;
+
+                // Store location ID as a hidden input
+                let locationInput = document.querySelector("input[name='location_id']");
+                if (!locationInput) {
+                    locationInput = document.createElement("input");
+                    locationInput.type = "hidden";
+                    locationInput.name = "location_id";
+                    document.getElementById("registrationForm").appendChild(locationInput);
+                }
+                locationInput.value = locationId;
+
+                // Fetch available times for the selected location and exam
+                const examId = document.querySelector("input[name='exam_id']").value;
+                fetch(`/get_locations/${examId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate times dropdown with 12-hour format times
+                        populateTimesDropdown(data.available_times);
+
+                        // Proceed to the date and time selection section
+                        currentContainerIndex = 2;
+                        showContainer(currentContainerIndex);
+                    });
+            }
+        });
+
+        // Navigation buttons
+        document.querySelectorAll(".back-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                if (currentContainerIndex > 0) {
+                    currentContainerIndex--;
+                    showContainer(currentContainerIndex);
+                }
+            });
+        });
+
+        // Initial container setup
+        showContainer(currentContainerIndex);
     });
-    
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateSelect = document.getElementById("dateSelect");
+        const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+        dateSelect.setAttribute("min", today); // Set the min attribute to today
+    });
 </script>
+
 {% endblock %}
